@@ -1,26 +1,26 @@
 # SYNOPSIS
 
-[![NPM Package](https://img.shields.io/npm/v/ethereumjs-vm.svg?style=flat-square)](https://www.npmjs.org/package/ethereumjs-vm)
-[![Build Status](https://img.shields.io/travis/ethereumjs/ethereumjs-vm.svg?branch=master&style=flat-square)](https://travis-ci.org/ethereumjs/ethereumjs-vm)
-[![Coverage Status](https://img.shields.io/coveralls/ethereumjs/ethereumjs-vm.svg?style=flat-square)](https://coveralls.io/r/ethereumjs/ethereumjs-vm)
-[![Gitter](https://img.shields.io/gitter/room/ethereum/ethereumjs-lib.svg?style=flat-square)](https://gitter.im/ethereum/ethereumjs-lib) or #ethereumjs on freenode
+[![NPM Package](https://img.shields.io/npm/v/vaporyjs-vm.svg?style=flat-square)](https://www.npmjs.org/package/vaporyjs-vm)
+[![Build Status](https://img.shields.io/travis/vaporyjs/vaporyjs-vm.svg?branch=master&style=flat-square)](https://travis-ci.org/vaporyjs/vaporyjs-vm)
+[![Coverage Status](https://img.shields.io/coveralls/vaporyjs/vaporyjs-vm.svg?style=flat-square)](https://coveralls.io/r/vaporyjs/vaporyjs-vm)
+[![Gitter](https://img.shields.io/gitter/room/vapory/vaporyjs-lib.svg?style=flat-square)](https://gitter.im/vapory/vaporyjs-lib) or #vaporyjs on freenode
 
 [![js-standard-style](https://cdn.rawgit.com/feross/standard/master/badge.svg)](https://github.com/feross/standard)
 
-Implements Ethereum's VM in Javascript.
+Implements Vapory's VM in Javascript.
 
 #### Fork Support
 
-This library always only supports the currently active Ethereum mainnet fork rules with its latest release, old fork rules are dropped with new releases once a HF occured.
+This library always only supports the currently active Vapory mainnet fork rules with its latest release, old fork rules are dropped with new releases once a HF occured.
 
-The current major [2.3.x](https://github.com/ethereumjs/ethereumjs-vm/releases) release series supports the  [Byzantium](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-609.md) fork changes. For a [Spurious Dragon](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-607.md) compatible version of this library install the latest of the ``2.2.x`` series (see [Changelog](./CHANGELOG.md)).
+The current major [2.3.x](https://github.com/vaporyjs/vaporyjs-vm/releases) release series supports the  [Byzantium](https://github.com/vaporyco/EIPs/blob/master/EIPS/eip-609.md) fork changes. For a [Spurious Dragon](https://github.com/vaporyco/EIPs/blob/master/EIPS/eip-607.md) compatible version of this library install the latest of the ``2.2.x`` series (see [Changelog](./CHANGELOG.md)).
 
 # INSTALL
-`npm install ethereumjs-vm`
+`npm install vaporyjs-vm`
 
 # USAGE
 ```javascript
-var VM = require('ethereumjs-vm')
+var VM = require('vaporyjs-vm')
 
 //create a new VM instance
 var vm = new VM()
@@ -35,11 +35,11 @@ vm.runCode({
 ```
 Also more examples can be found here
 - [examples](./examples)
-- [old blog post](https://wanderer.github.io/ethereum/nodejs/code/2014/08/12/running-contracts-with-vm/)
+- [old blog post](https://wanderer.github.io/vapory/nodejs/code/2014/08/12/running-contracts-with-vm/)
 
 # BROWSER
 
-To build for standalone use in the browser, install `browserify` and check [run-transactions-simple example](https://github.com/ethereumjs/ethereumjs-vm/tree/master/examples/run-transactions-simple). This will give you a global variable `EthVM` to use. The generated file will be at `./examples/run-transactions-simple/build.js`.
+To build for standalone use in the browser, install `browserify` and check [run-transactions-simple example](https://github.com/vaporyjs/vaporyjs-vm/tree/master/examples/run-transactions-simple). This will give you a global variable `VapVM` to use. The generated file will be at `./examples/run-transactions-simple/build.js`.
 
 # API
   - [`new VM([opts])`](#new-vmstatetrie-blockchain)
@@ -66,14 +66,14 @@ Creates a new VM object
 
 #### `vm.runBlockchain(blockchain, cb)`
 Process blocks and adds them to the blockchain.
-- `blockchain` - A [blockchain](https://github.com/ethereum/ethereumjs-blockchain) that to process
+- `blockchain` - A [blockchain](https://github.com/vaporyco/vaporyjs-blockchain) that to process
 - `cb` - The callback. It is given an err parameter if it fails
 
 --------------------------------------------------------
 
 #### `vm.runBlock(opts, cb)`
 Processes the `block` running all of the transactions it contains and updating the miner's account.
-- `opts.block` - The [`Block`](https://github.com/ethereumjs/ethereumjs-block) to process
+- `opts.block` - The [`Block`](https://github.com/vaporyjs/vaporyjs-block) to process
 - `opts.generate` - a `Boolean`; whether to generate the stateRoot. If false  `runBlock` will check the stateRoot of the block against the Trie
 - `cb` - The callback. It is given two arguments, an `error` string containing an error that may have happened or `null`, and a `results` object with the following properties:
   - `receipts` - the receipts from the transactions in the block
@@ -83,10 +83,10 @@ Processes the `block` running all of the transactions it contains and updating t
 
 #### `vm.runTx(opts, cb)`
 Process a transaction.
-- `opts.tx` - A [`Transaction`](https://github.com/ethereum/ethereumjs-tx) to run.
+- `opts.tx` - A [`Transaction`](https://github.com/vaporyco/vaporyjs-tx) to run.
 - `opts.block` - The block to which the `tx` belongs. If omitted a blank block will be used.
 - `cb` - The callback. It is given two arguments, an `error` string containing an error that may have happened or `null`, and a `results` object with the following properties:
-  - `amountSpent` - the amount of ether used by this transaction as a `bignum`
+  - `amountSpent` - the amount of vapor used by this transaction as a `bignum`
   - `gasUsed` - the amount of gas used by the transaction
   - `vm` - contains the results from running the code, if any, as described in [`vm.runCode(params, cb)`](#vmruncodeopts-cb)
 
@@ -96,10 +96,10 @@ Process a transaction.
 Runs EVM code
 - `opts.code` - The EVM code to run given as a `Buffer`
 - `opts.data` - The input data given as a `Buffer`
-- `opts.value` - The value in ether that is being sent to `opt.address`. Defaults to `0`
-- `opts.block` - The [`Block`](https://github.com/ethereumjs/ethereumjs-block) the `tx` belongs to. If omitted a blank block will be used.
+- `opts.value` - The value in vapor that is being sent to `opt.address`. Defaults to `0`
+- `opts.block` - The [`Block`](https://github.com/vaporyjs/vaporyjs-block) the `tx` belongs to. If omitted a blank block will be used.
 - `opts.gasLimit` - The gas limit for the code given as a `Buffer`
-- `opts.account` - The [`Account`](https://github.com/ethereumjs/ethereumjs-account) that the executing code belongs to. If omitted an empty account will be used
+- `opts.account` - The [`Account`](https://github.com/vaporyjs/vaporyjs-account) that the executing code belongs to. If omitted an empty account will be used
 - `opts.address` - The address of the account that is executing this code. The address should be a `Buffer` of bytes. Defaults to `0`
 - `opts.origin` - The address where the call originated from. The address should be a `Buffer` of 20bits. Defaults to `0`
 - `opts.caller` - The address that ran this code. The address should be a `Buffer` of 20bits. Defaults to `0`
@@ -123,7 +123,7 @@ Generates the Canonical genesis state.
 
 #### `vm.stateManager.generateGenesis(genesisData, cb)`
 Generate the genesis state.
-- `genesisData` - an `Object` whose keys are addresses and values are `string`s representing initial allocation of ether.
+- `genesisData` - an `Object` whose keys are addresses and values are `string`s representing initial allocation of vapor.
 - `cb` - The callback
 
 ```javascript
@@ -147,7 +147,7 @@ The `step` event is given an `Object` and callback. The `Object` has the followi
 - `gasLeft` - a `bignum` standing for the amount of gasLeft
 - `stack` - an `Array` of `Buffers` containing the stack.
 - `storageTrie` - the storage [trie](https://github.com/wanderer/merkle-patricia-tree) for the account
-- `account` - the [`Account`](https://github.com/ethereum/ethereumjs-account) which owns the code running.
+- `account` - the [`Account`](https://github.com/vaporyco/vaporyjs-account) which owns the code running.
 - `address` - the address of the `account`
 - `depth` - the current number of calls deep the contract is
 - `memory` - the memory of the VM as a `buffer`
@@ -203,10 +203,10 @@ The opFns for `CREATE`, `CALL`, and `CALLCODE` call back up to `runCall`.
 
 ### Running Tests
 
-Tests can be found in the ``tests`` directory, with ``FORK_CONFIG`` set in ``tests/tester.js``. There are test runners for [State tests](http://www.ethdocs.org/en/latest/contracts-and-transactions/ethereum-tests/state_tests/index.html) and [Blockchain tests](http://www.ethdocs.org/en/latest/contracts-and-transactions/ethereum-tests/blockchain_tests/index.html). VM tests are disabled since Frontier gas costs are not supported any more. Tests are then executed by the [ethereumjs-testing](https://github.com/ethereumjs/ethereumjs-testing) utility library using the official client-independent [Ethereum tests](https://github.com/ethereum/tests).
+Tests can be found in the ``tests`` directory, with ``FORK_CONFIG`` set in ``tests/tester.js``. There are test runners for [State tests](http://www.ethdocs.org/en/latest/contracts-and-transactions/vapory-tests/state_tests/index.html) and [Blockchain tests](http://www.ethdocs.org/en/latest/contracts-and-transactions/vapory-tests/blockchain_tests/index.html). VM tests are disabled since Frontier gas costs are not supported any more. Tests are then executed by the [vaporyjs-testing](https://github.com/vaporyjs/vaporyjs-testing) utility library using the official client-independent [Vapory tests](https://github.com/vaporyco/tests).
 
-For a wider picture about how to use tests to implement EIPs you can have a look at this [reddit post](https://www.reddit.com/r/ethereum/comments/6kc5g3/ethereumjs_team_is_seeking_contributors/)
-or the associated YouTube video introduction to [core development with Ethereumjs-vm](https://www.youtube.com/watch?v=L0BVDl6HZzk&feature=youtu.be).
+For a wider picture about how to use tests to implement EIPs you can have a look at this [reddit post](https://www.reddit.com/r/vapory/comments/6kc5g3/vaporyjs_team_is_seeking_contributors/)
+or the associated YouTube video introduction to [core development with Vaporyjs-vm](https://www.youtube.com/watch?v=L0BVDl6HZzk&feature=youtu.be).
 
 #### Running different Test Types
 
@@ -239,7 +239,7 @@ Running a specific state test case:
 `node ./tests/tester -s --test='stackOverflow'`
 
 Only run test cases with selected ``data``, ``gas`` and/or ``value`` values (see 
-[attribute description](http://ethereum-tests.readthedocs.io/en/latest/test_types/state_tests.html) in 
+[attribute description](http://vapory-tests.readthedocs.io/en/latest/test_types/state_tests.html) in 
 test docs), provided by the index of the array element in the test ``transaction`` section:
 
 `node tests/tester -s --test='CreateCollisionToEmpty' --data=0 --gas=1 --value=0`
@@ -273,11 +273,11 @@ Blockchain tests support `--debug` to verify the postState:
 
 `node ./tests/tester -b  --debug --test='ZeroValue_SELFDESTRUCT_ToOneStorageKey_OOGRevert_d0g0v0_EIP158'`
 
-All/most State tests are replicated as Blockchain tests in a ``GeneralStateTests`` [sub directory](https://github.com/ethereum/tests/tree/develop/BlockchainTests/GeneralStateTests) in the Ethereum tests repo, so for debugging single test cases the Blockchain test version of the State test can be used.
+All/most State tests are replicated as Blockchain tests in a ``GeneralStateTests`` [sub directory](https://github.com/vaporyco/tests/tree/develop/BlockchainTests/GeneralStateTests) in the Vapory tests repo, so for debugging single test cases the Blockchain test version of the State test can be used.
 
 #### Debugging Tools
 
-For comparing ``EVM`` traces [here](https://gist.github.com/cdetrio/41172f374ae32047a6c9e97fa9d09ad0) are some instructions for setting up ``pyethereum`` to generate corresponding traces for state tests.
+For comparing ``EVM`` traces [here](https://gist.github.com/cdetrio/41172f374ae32047a6c9e97fa9d09ad0) are some instructions for setting up ``pyvapory`` to generate corresponding traces for state tests.
 
 Compare TAP output from blockchain/state tests and produces concise diff of the differences between them (example):
 

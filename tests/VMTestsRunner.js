@@ -1,10 +1,10 @@
 const async = require('async')
 const VM = require('../')
-const Account = require('ethereumjs-account')
+const Account = require('vaporyjs-account')
 const testUtil = require('./util')
 const Trie = require('merkle-patricia-tree/secure')
-const ethUtil = require('ethereumjs-util')
-const BN = ethUtil.BN
+const vapUtil = require('vaporyjs-util')
+const BN = vapUtil.BN
 
 module.exports = function runVMTest (options, testData, t, cb) {
   let state = new Trie()
