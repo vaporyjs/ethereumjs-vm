@@ -1,15 +1,15 @@
 {
   "name": "vaporyjs-vm",
   "namespace": "vaporyjs",
-  "version": "2.3.3",
-  "description": "an vapory VM implementation",
+  "version": "2.3.4",
+  "description": "a vapory VM implementation",
   "main": "index.js",
   "dependencies": {
     "async": "2.1.2",
     "async-eventemitter": "0.2.2",
     "vapory-common": "0.2.2",
     "vaporyjs-account": "^2.0.3",
-    "vaporyjs-block": "~1.7.0",
+    "vaporyjs-block": "^1.7.2",
     "vaporyjs-util": "^5.1.5",
     "fake-merkle-patricia-tree": "1.0.1",
     "functional-red-black-tree": "1.0.1",
