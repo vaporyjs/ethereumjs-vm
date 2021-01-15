@@ -6897,7 +6897,7 @@ module.exports = VM;
 VM.deps = {
   vapUtil: vapUtil,
   Account: require('vaporyjs-account'),
-  Trie: require('merkle-patricia-tree'),
+  Trie: require('@vaporyjs/merkle-patricia-tree'),
   rlp: require('vaporyjs-util').rlp
 
   /**
@@ -8277,7 +8277,7 @@ var vapUtil = require('vaporyjs-util');
 var Bloom = require('./bloom.js');
 var common = require('vapory-common');
 var rlp = vapUtil.rlp;
-var Trie = require('merkle-patricia-tree');
+var Trie = require('@vaporyjs/merkle-patricia-tree');
 var BN = vapUtil.BN;
 
 var minerReward = new BN(common.minerReward.v);
@@ -9247,7 +9247,7 @@ function txLogsBloom(logs) {
 'use strict';
 
 var Buffer = require('safe-buffer').Buffer;
-var Trie = require('merkle-patricia-tree/secure.js');
+var Trie = require('@vaporyjs/merkle-patricia-tree/secure.js');
 var common = require('vapory-common');
 var async = require('async');
 var Account = require('vaporyjs-account');
@@ -34374,7 +34374,7 @@ BlockHeader.prototype.isHomesteadReprice = function () {
 
 var vapUtil = require('vaporyjs-util');
 var Tx = require('vaporyjs-tx');
-var Trie = require('merkle-patricia-tree');
+var Trie = require('@vaporyjs/merkle-patricia-tree');
 var BN = vapUtil.BN;
 var rlp = vapUtil.rlp;
 var async = require('async');
@@ -48525,7 +48525,7 @@ module.exports = SecureTrie
 inherits(SecureTrie, CheckpointTrie)
 
 /**
- * You can create a secure Trie where the keys are automatically hashed using **SHA3** by using `require('merkle-patricia-tree/secure')`. It has the same methods and constuctor as `Trie`
+ * You can create a secure Trie where the keys are automatically hashed using **SHA3** by using `require('@vaporyjs/merkle-patricia-tree/secure')`. It has the same methods and constuctor as `Trie`
  * @class SecureTrie
  * @extends Trie
  */

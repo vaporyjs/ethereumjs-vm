@@ -1,7 +1,7 @@
 {
   "name": "vaporyjs-vm",
   "namespace": "vaporyjs",
-  "version": "2.3.4",
+  "version": "2.3.5",
   "description": "a vapory VM implementation",
   "main": "index.js",
   "dependencies": {

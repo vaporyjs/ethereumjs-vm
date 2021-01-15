@@ -1,7 +1,7 @@
 const async = require('async')
 const VM = require('../index.js')
 const testUtil = require('./util')
-const Trie = require('merkle-patricia-tree/secure')
+const Trie = require('@vaporyjs/merkle-patricia-tree/secure')
 const vapUtil = require('vaporyjs-util')
 const BN = vapUtil.BN
 

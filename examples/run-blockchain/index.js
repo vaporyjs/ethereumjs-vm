@@ -1,6 +1,6 @@
 const Buffer = require('safe-buffer').Buffer // use for Node.js <4.5.0
 const async = require('async')
-const Trie = require('merkle-patricia-tree/secure')
+const Trie = require('@vaporyjs/merkle-patricia-tree/secure')
 const Block = require('vaporyjs-block')
 const Blockchain = require('vaporyjs-blockchain')
 const BlockHeader = require('vaporyjs-block/header.js')
