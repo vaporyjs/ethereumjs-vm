@@ -4,8 +4,8 @@ var async = require('async')
 var VM = require('../index.js')
 var Account = require('vaporyjs-account')
 var Transaction = require('vaporyjs-tx')
-var Trie = require('merkle-patricia-tree')
-var rlp = require('rlp')
+var Trie = require('@vaporyjs/merkle-patricia-tree')
+var rlp = require('@vaporyjs/rlp')
 var utils = require('vaporyjs-util')
 
 // creating a trie that just resides in memory

@@ -286,8 +286,8 @@ module.exports = VM
 VM.deps = {
   vapUtil: require('vaporyjs-util'),
   Account: require('vaporyjs-account'),
-  Trie: require('merkle-patricia-tree'),
-  rlp: require('rlp')
+  Trie: require('@vaporyjs/merkle-patricia-tree'),
+  rlp: require('@vaporyjs/rlp')
 }
 
 /**
@@ -1699,7 +1699,7 @@ const vapUtil = require('vaporyjs-util')
 const Bloom = require('./bloom.js')
 const common = require('vapory-common')
 const rlp = vapUtil.rlp
-const Trie = require('merkle-patricia-tree')
+const Trie = require('@vaporyjs/merkle-patricia-tree')
 const BN = vapUtil.BN
 
 const minerReward = new BN(common.minerReward.v)
@@ -2635,7 +2635,7 @@ function txLogsBloom (logs) {
 }).call(this,require("buffer").Buffer)
 },{"./bloom.js":3,"async":29,"bn.js":30,"buffer":130,"vaporyjs-block":61}],21:[function(require,module,exports){
 (function (Buffer){
-const Trie = require('merkle-patricia-tree/secure.js')
+const Trie = require('@vaporyjs/merkle-patricia-tree/secure.js')
 const common = require('vapory-common')
 const async = require('async')
 const Account = require('vaporyjs-account')
@@ -16270,7 +16270,7 @@ module.exports={
 },{}],58:[function(require,module,exports){
 (function (Buffer){
 const vapUtil = require('vaporyjs-util')
-const rlp = require('rlp')
+const rlp = require('@vaporyjs/rlp')
 
 var Account = module.exports = function (data) {
   // Define Properties
@@ -16380,7 +16380,7 @@ Account.prototype.isEmpty = function () {
 const SHA3 = require('sha3')
 const ec = require('elliptic').ec('secp256k1')
 const assert = require('assert')
-const rlp = require('rlp')
+const rlp = require('@vaporyjs/rlp')
 const BN = require('bn.js')
 
 // the max interger that this VM can handle
@@ -16934,7 +16934,7 @@ BlockHeader.prototype.isGenesis = function () {
 require('es6-shim')
 const vapUtil = require('vaporyjs-util')
 const Tx = require('vaporyjs-tx')
-const Trie = require('merkle-patricia-tree')
+const Trie = require('@vaporyjs/merkle-patricia-tree')
 const BN = vapUtil.BN
 const rlp = vapUtil.rlp
 const async = require('async')
@@ -17429,7 +17429,7 @@ Transaction.prototype.validate = function () {
 const SHA3 = require('sha3')
 const ec = require('elliptic').ec('secp256k1')
 const assert = require('assert')
-const rlp = require('rlp')
+const rlp = require('@vaporyjs/rlp')
 const BN = require('bn.js')
 
 // the max interger that this VM can handle
@@ -18035,7 +18035,7 @@ function toBuffer (v) {
 const SHA3 = require('sha3')
 const ec = require('elliptic').ec('secp256k1')
 const assert = require('assert')
-const rlp = require('rlp')
+const rlp = require('@vaporyjs/rlp')
 const BN = require('bn.js')
 
 // the max interger that this VM can handle
@@ -25925,7 +25925,7 @@ const assert = require('assert')
 const levelup = require('levelup')
 const memdown = require('memdown')
 const async = require('async')
-const rlp = require('rlp')
+const rlp = require('@vaporyjs/rlp')
 const vapUtil = require('vaporyjs-util')
 const semaphore = require('semaphore')
 const TrieNode = require('./trieNode')
@@ -26899,7 +26899,7 @@ function SecureTrie () {
 
 },{"./index":103,"./secure-interface":105,"util":296}],107:[function(require,module,exports){
 (function (Buffer){
-const rlp = require('rlp')
+const rlp = require('@vaporyjs/rlp')
 const vapUtil = require('vaporyjs-util')
 
 module.exports = TrieNode

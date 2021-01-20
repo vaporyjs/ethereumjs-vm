@@ -3,7 +3,7 @@ const VM = require('../')
 var async = require('async')
 var Account = require('vaporyjs-account')
 var Transaction = require('vaporyjs-tx')
-var Trie = require('merkle-patricia-tree')
+var Trie = require('@vaporyjs/merkle-patricia-tree')
 var vapUtil = require('vaporyjs-util')
 
 tape('test the cache api', function (t) {
