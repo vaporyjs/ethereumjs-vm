@@ -1,10 +1,10 @@
 const async = require('async')
 const testUtil = require('./util.js')
-const ethUtil = require('ethereumjs-util')
+const vapUtil = require('vaporyjs-util')
 const Trie = require('merkle-patricia-tree/secure')
-const Block = require('ethereumjs-block')
-const Blockchain = require('ethereumjs-blockchain')
-const BlockHeader = require('ethereumjs-block/header.js')
+const Block = require('vaporyjs-block')
+const Blockchain = require('vaporyjs-blockchain')
+const BlockHeader = require('vaporyjs-block/header.js')
 const VM = require('../')
 const Level = require('levelup')
 
@@ -15,7 +15,7 @@ module.exports = function runBlockchainTest (options, testData, t, cb) {
   })
   var state = new Trie()
   var blockchain = new Blockchain(blockchainDB)
-  blockchain.ethash.cacheDB = cacheDB
+  blockchain.vapash.cacheDB = cacheDB
   var vm = new VM(state, blockchain)
   var genesisBlock = new Block()
 
@@ -102,7 +102,7 @@ function formatBlockHeader (data) {
   var r = {}
   var keys = Object.keys(data)
   keys.forEach(function (key) {
-    r[key] = ethUtil.addHexPrefix(data[key])
+    r[key] = vapUtil.addHexPrefix(data[key])
   })
   return r
 }

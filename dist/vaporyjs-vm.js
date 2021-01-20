@@ -4,7 +4,7 @@ module.exports = require('./lib/index.js')
 },{"./lib/index.js":6}],2:[function(require,module,exports){
 (function (Buffer){
 const assert = require('assert')
-const utils = require('ethereumjs-util')
+const utils = require('vaporyjs-util')
 const byteSize = 256
 
 /**
@@ -93,10 +93,10 @@ Bloom.prototype.or = function (bloom) {
 }
 
 }).call(this,require("buffer").Buffer)
-},{"assert":163,"buffer":165,"ethereumjs-util":33}],3:[function(require,module,exports){
+},{"assert":163,"buffer":165,"vaporyjs-util":33}],3:[function(require,module,exports){
 (function (Buffer){
 const Tree = require('functional-red-black-tree')
-const Account = require('ethereumjs-account')
+const Account = require('vaporyjs-account')
 const async = require('async')
 
 var Cache = module.exports = function (trie) {
@@ -259,7 +259,7 @@ Cache.prototype.del = function (key) {
 }
 
 }).call(this,require("buffer").Buffer)
-},{"async":24,"buffer":165,"ethereumjs-account":29,"functional-red-black-tree":61}],4:[function(require,module,exports){
+},{"async":24,"buffer":165,"vaporyjs-account":29,"functional-red-black-tree":61}],4:[function(require,module,exports){
 exports.ERROR = {
   OUT_OF_GAS: 'out of gas',
   STACK_UNDERFLOW: 'stack underflow',
@@ -269,7 +269,7 @@ exports.ERROR = {
 
 },{}],5:[function(require,module,exports){
 (function (Buffer){
-var utils = require('ethereumjs-util')
+var utils = require('vaporyjs-util')
 
 module.exports = {
   getBlock: function (n, cb) {
@@ -286,12 +286,12 @@ module.exports = {
 }
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":165,"ethereumjs-util":33}],6:[function(require,module,exports){
+},{"buffer":165,"vaporyjs-util":33}],6:[function(require,module,exports){
 require('es6-shim')
 const util = require('util')
 const async = require('async')
 const BN = require('bn.js')
-const common = require('ethereum-common')
+const common = require('vapory-common')
 const StateManager = require('./stateManager.js')
 var AsyncEventEmitter = require('async-eventemitter')
 
@@ -304,8 +304,8 @@ const num04 = require('./precompiled/04-identity.js')
 module.exports = VM
 
 VM.deps = {
-  ethUtil: require('ethereumjs-util'),
-  Account: require('ethereumjs-account'),
+  vapUtil: require('vaporyjs-util'),
+  Account: require('vaporyjs-account'),
   Trie: require('merkle-patricia-tree'),
   rlp: require('rlp')
 }
@@ -359,7 +359,7 @@ VM.prototype.populateCache = function (addresses, cb) {
   this.stateManager.warmCache(addresses, cb)
 }
 
-},{"./precompiled/01-ecrecover.js":10,"./precompiled/02-sha256.js":11,"./precompiled/03-repemd160.js":12,"./precompiled/04-identity.js":13,"./runBlock.js":14,"./runBlockchain.js":15,"./runCall.js":16,"./runCode.js":17,"./runJit.js":18,"./runTx.js":19,"./stateManager.js":20,"async":24,"async-eventemitter":21,"bn.js":25,"es6-shim":26,"ethereum-common":27,"ethereumjs-account":29,"ethereumjs-util":33,"merkle-patricia-tree":100,"rlp":136,"util":383}],7:[function(require,module,exports){
+},{"./precompiled/01-ecrecover.js":10,"./precompiled/02-sha256.js":11,"./precompiled/03-repemd160.js":12,"./precompiled/04-identity.js":13,"./runBlock.js":14,"./runBlockchain.js":15,"./runCall.js":16,"./runCode.js":17,"./runJit.js":18,"./runTx.js":19,"./stateManager.js":20,"async":24,"async-eventemitter":21,"bn.js":25,"es6-shim":26,"vapory-common":27,"vaporyjs-account":29,"vaporyjs-util":33,"merkle-patricia-tree":100,"rlp":136,"util":383}],7:[function(require,module,exports){
 const BN = require('bn.js')
 const pow32 = new BN('010000000000000000000000000000000000000000000000000000000000000000', 16)
 const pow31 = new BN('0100000000000000000000000000000000000000000000000000000000000000', 16)
@@ -467,8 +467,8 @@ module.exports = function (a) {
 },{"bn.js":25}],8:[function(require,module,exports){
 (function (Buffer){
 const async = require('async')
-const fees = require('ethereum-common')
-const utils = require('ethereumjs-util')
+const fees = require('vapory-common')
+const utils = require('vaporyjs-util')
 const BN = utils.BN
 const rlp = utils.rlp
 const constants = require('./constants.js')
@@ -1259,7 +1259,7 @@ function makeCall (runState, callOptions, localOpts, cb) {
   // increment the runState.depth
   callOptions.depth = runState.depth + 1
 
-  // check if account has enough ether
+  // check if account has enough vapor
   if (runState.depth >= fees.stackLimit.v || new BN(runState.contract.balance).cmp(callOptions.value) === -1) {
     runState.stack.push(new Buffer([0]))
     cb()
@@ -1317,7 +1317,7 @@ function makeCall (runState, callOptions, localOpts, cb) {
 }
 
 }).call(this,require("buffer").Buffer)
-},{"./constants.js":4,"./logTable.js":7,"async":24,"buffer":165,"ethereum-common":27,"ethereumjs-util":33}],9:[function(require,module,exports){
+},{"./constants.js":4,"./logTable.js":7,"async":24,"buffer":165,"vapory-common":27,"vaporyjs-util":33}],9:[function(require,module,exports){
 const codes = {
   // 0x0 range - arithmetic ops
   // name, baseCost, off stack, on stack, dynamic
@@ -1498,9 +1498,9 @@ module.exports = function (op, full) {
 
 },{}],10:[function(require,module,exports){
 (function (Buffer){
-const utils = require('ethereumjs-util')
+const utils = require('vaporyjs-util')
 const BN = require('bn.js')
-const fees = require('ethereum-common')
+const fees = require('vapory-common')
 const ecdsa = require('secp256k1')
 const gasCost = new BN(fees.ecrecoverGas.v)
 
@@ -1561,12 +1561,12 @@ module.exports = function (opts) {
 }
 
 }).call(this,require("buffer").Buffer)
-},{"bn.js":25,"buffer":165,"ethereum-common":27,"ethereumjs-util":33,"secp256k1":137}],11:[function(require,module,exports){
+},{"bn.js":25,"buffer":165,"vapory-common":27,"vaporyjs-util":33,"secp256k1":137}],11:[function(require,module,exports){
 (function (Buffer){
 const crypto = require('crypto')
 const BN = require('bn.js')
 const error = require('../constants.js').ERROR
-const fees = require('ethereum-common')
+const fees = require('vapory-common')
 
 module.exports = function (opts) {
   var sha256 = crypto.createHash('SHA256')
@@ -1594,13 +1594,13 @@ module.exports = function (opts) {
 }
 
 }).call(this,require("buffer").Buffer)
-},{"../constants.js":4,"bn.js":25,"buffer":165,"crypto":169,"ethereum-common":27}],12:[function(require,module,exports){
+},{"../constants.js":4,"bn.js":25,"buffer":165,"crypto":169,"vapory-common":27}],12:[function(require,module,exports){
 (function (Buffer){
-const ethUtil = require('ethereumjs-util')
+const vapUtil = require('vaporyjs-util')
 const crypto = require('crypto')
 const BN = require('bn.js')
 const error = require('../constants.js').ERROR
-const fees = require('ethereum-common')
+const fees = require('vapory-common')
 
 module.exports = function(opts){
   var results = {}
@@ -1630,7 +1630,7 @@ module.exports = function(opts){
   results.gasUsed += dataGas2
   results.gasUsed = new BN(results.gasUsed)
 
-  hashStr = ethUtil.pad(ripemd160.update(data).digest('bin'), 32) // nb: bin
+  hashStr = vapUtil.pad(ripemd160.update(data).digest('bin'), 32) // nb: bin
 
   results.exception = 1
   results['return'] = new Buffer(hashStr, 'hex')
@@ -1639,9 +1639,9 @@ module.exports = function(opts){
 }
 
 }).call(this,require("buffer").Buffer)
-},{"../constants.js":4,"bn.js":25,"buffer":165,"crypto":169,"ethereum-common":27,"ethereumjs-util":33}],13:[function(require,module,exports){
+},{"../constants.js":4,"bn.js":25,"buffer":165,"crypto":169,"vapory-common":27,"vaporyjs-util":33}],13:[function(require,module,exports){
 const BN = require('bn.js')
-const fees = require('ethereum-common')
+const fees = require('vapory-common')
 const error = require('../constants.js').ERROR
 
 module.exports = function(opts){
@@ -1662,15 +1662,15 @@ module.exports = function(opts){
   return results
 }
 
-},{"../constants.js":4,"bn.js":25,"ethereum-common":27}],14:[function(require,module,exports){
+},{"../constants.js":4,"bn.js":25,"vapory-common":27}],14:[function(require,module,exports){
 (function (Buffer){
 const async = require('async')
-const ethUtil = require('ethereumjs-util')
+const vapUtil = require('vaporyjs-util')
 const Bloom = require('./bloom.js')
-const common = require('ethereum-common')
-const rlp = ethUtil.rlp
+const common = require('vapory-common')
+const rlp = vapUtil.rlp
 const Trie = require('merkle-patricia-tree')
-const BN = ethUtil.BN
+const BN = vapUtil.BN
 
 const minerReward = new BN(common.minerReward.v)
 const niblingReward = new BN(common.niblingReward.v)
@@ -1826,7 +1826,7 @@ module.exports = function (opts, cb) {
           if (bloom.bitvector.toString('hex') !== block.header.bloom.toString('hex')) {
             err = (err || '') + 'invalid bloom '
           }
-          if (ethUtil.bufferToInt(block.header.gasUsed) !== Number(gasUsed)) {
+          if (vapUtil.bufferToInt(block.header.gasUsed) !== Number(gasUsed)) {
             err = (err || '') + 'invalid gasUsed '
           }
           if (self.trie.root.toString('hex') !== block.header.stateRoot.toString('hex')) {
@@ -1875,7 +1875,7 @@ module.exports = function (opts, cb) {
 }
 
 }).call(this,require("buffer").Buffer)
-},{"./bloom.js":2,"async":24,"buffer":165,"ethereum-common":27,"ethereumjs-util":33,"merkle-patricia-tree":100}],15:[function(require,module,exports){
+},{"./bloom.js":2,"async":24,"buffer":165,"vapory-common":27,"vaporyjs-util":33,"merkle-patricia-tree":100}],15:[function(require,module,exports){
 const async = require('async')
 
 /**
@@ -1945,10 +1945,10 @@ module.exports = function (blockchain, cb) {
 },{"async":24}],16:[function(require,module,exports){
 (function (Buffer){
 const async = require('async')
-const ethUtil = require('ethereumjs-util')
-const BN = ethUtil.BN
-const fees = require('ethereum-common')
-const Account = require('ethereumjs-account')
+const vapUtil = require('vaporyjs-util')
+const BN = vapUtil.BN
+const fees = require('vapory-common')
+const Account = require('vaporyjs-account')
 
 /**
  * runs a CALL operation
@@ -2006,7 +2006,7 @@ module.exports = function (opts, cb) {
       code = txData
       txData = undefined
       var newNonce = new BN(account.nonce).subn(1)
-      createdAddress = toAddress = ethUtil.generateAddress(caller, newNonce.toArray())
+      createdAddress = toAddress = vapUtil.generateAddress(caller, newNonce.toArray())
       toAccount = new Account()
     } else {
       // else load the `to` account
@@ -2120,11 +2120,11 @@ module.exports = function (opts, cb) {
 }
 
 }).call(this,require("buffer").Buffer)
-},{"async":24,"buffer":165,"ethereum-common":27,"ethereumjs-account":29,"ethereumjs-util":33}],17:[function(require,module,exports){
+},{"async":24,"buffer":165,"vapory-common":27,"vaporyjs-account":29,"vaporyjs-util":33}],17:[function(require,module,exports){
 (function (Buffer){
 /*
 
-This is the core of the Ethereum Virtual Machine (EVM or just VM).
+This is the core of the Vapory Virtual Machine (VVM or just VM).
 
 NOTES:
 
@@ -2138,8 +2138,8 @@ item length then you must use utils.pad(<item>, 32) first.
 */
 
 const async = require('async')
-const utils = require('ethereumjs-util')
-const Block = require('ethereumjs-block')
+const utils = require('vaporyjs-util')
+const Block = require('vaporyjs-block')
 const lookupOpInfo = require('./opcodes.js')
 const opFns = require('./opFns.js')
 const constants = require('./constants.js')
@@ -2149,7 +2149,7 @@ const BN = utils.BN
 const ERROR = constants.ERROR
 
 /**
- * Runs EVM code
+ * Runs VVM code
  * @param opts
  * @param opts.account {Account} the account that the exucuting code belongs to
  * @param opts.address {Buffer}  the address of the account that is exucuting this code
@@ -2374,7 +2374,7 @@ function preprocessValidJumps (runState) {
 }
 
 }).call(this,require("buffer").Buffer)
-},{"./constants.js":4,"./opFns.js":8,"./opcodes.js":9,"async":24,"buffer":165,"ethereumjs-block":31,"ethereumjs-util":33,"timers":381}],18:[function(require,module,exports){
+},{"./constants.js":4,"./opFns.js":8,"./opcodes.js":9,"async":24,"buffer":165,"vaporyjs-block":31,"vaporyjs-util":33,"timers":381}],18:[function(require,module,exports){
 module.exports = function (opts, cb) {
   // for precompiled
   var results
@@ -2398,7 +2398,7 @@ module.exports = function (opts, cb) {
 const async = require('async')
 const BN = require('bn.js')
 const Bloom = require('./bloom.js')
-const Block = require('ethereumjs-block')
+const Block = require('vaporyjs-block')
 
 /**
  * Process a transaction. Run the vm. Transfers eth. checks balaces
@@ -2595,12 +2595,12 @@ function txLogsBloom (logs) {
 }
 
 }).call(this,require("buffer").Buffer)
-},{"./bloom.js":2,"async":24,"bn.js":25,"buffer":165,"ethereumjs-block":31}],20:[function(require,module,exports){
+},{"./bloom.js":2,"async":24,"bn.js":25,"buffer":165,"vaporyjs-block":31}],20:[function(require,module,exports){
 (function (Buffer){
 const Trie = require('merkle-patricia-tree/secure.js')
-const common = require('ethereum-common')
+const common = require('vapory-common')
 const async = require('async')
-const Account = require('ethereumjs-account')
+const Account = require('vaporyjs-account')
 const fakeBlockchain = require('./fakeBlockChain.js')
 const Cache = require('./cache.js')
 const BN = require('bn.js')
@@ -2856,7 +2856,7 @@ proto.generateGenesis = function (initState, cb) {
 }
 
 }).call(this,require("buffer").Buffer)
-},{"./cache.js":3,"./fakeBlockChain.js":5,"async":24,"bn.js":25,"buffer":165,"ethereum-common":27,"ethereumjs-account":29,"merkle-patricia-tree/secure.js":133}],21:[function(require,module,exports){
+},{"./cache.js":3,"./fakeBlockChain.js":5,"async":24,"bn.js":25,"buffer":165,"vapory-common":27,"vaporyjs-account":29,"merkle-patricia-tree/secure.js":133}],21:[function(require,module,exports){
 'use strict';
 
 module.exports = require('./lib/AsyncEventEmitter');
@@ -11298,7 +11298,7 @@ module.exports={
 
 },{}],29:[function(require,module,exports){
 (function (Buffer){
-const ethUtil = require('ethereumjs-util')
+const vapUtil = require('vaporyjs-util')
 const rlp = require('rlp')
 
 var Account = module.exports = function (data) {
@@ -11312,14 +11312,14 @@ var Account = module.exports = function (data) {
   }, {
     name: 'stateRoot',
     length: 32,
-    default: ethUtil.SHA3_RLP
+    default: vapUtil.SHA3_RLP
   }, {
     name: 'codeHash',
     length: 32,
-    default: ethUtil.SHA3_NULL
+    default: vapUtil.SHA3_NULL
   }]
 
-  ethUtil.defineProperties(this, fields, data)
+  vapUtil.defineProperties(this, fields, data)
 }
 
 Account.prototype.serialize = function () {
@@ -11327,7 +11327,7 @@ Account.prototype.serialize = function () {
 }
 
 Account.isContract = Account.prototype.isContract = function (address) {
-  var result = this.codeHash.toString('hex') !== ethUtil.SHA3_NULL.toString('hex')
+  var result = this.codeHash.toString('hex') !== vapUtil.SHA3_NULL.toString('hex')
   if (address) {
     result |= this.isPrecompiled(address)
   }
@@ -11336,12 +11336,12 @@ Account.isContract = Account.prototype.isContract = function (address) {
 }
 
 Account.isPrecompiled = Account.prototype.isPrecompiled = function (address) {
-  var a = ethUtil.unpad(ethUtil.unpad(address))
+  var a = vapUtil.unpad(vapUtil.unpad(address))
   return a.length === 1 && a[0] > 0 && a[0] < 5
 }
 
 Account.prototype.getCode = function (state, cb) {
-  if (this.codeHash.toString('hex') === ethUtil.SHA3_NULL.toString('hex')) {
+  if (this.codeHash.toString('hex') === vapUtil.SHA3_NULL.toString('hex')) {
     cb(null, new Buffer([]))
     return
   }
@@ -11363,13 +11363,13 @@ Account.prototype.setCode = function (trie, code, compiled, cb) {
 
   // store code for a new contract
   if (!compiled) {
-    this.codeHash = ethUtil.sha3(code)
+    this.codeHash = vapUtil.sha3(code)
   }
 
   // set the compile flag
   code = Buffer.concat([new Buffer([compiled]), code])
 
-  if (this.codeHash.toString('hex') === ethUtil.SHA3_NULL) {
+  if (this.codeHash.toString('hex') === vapUtil.SHA3_NULL) {
     cb(null, new Buffer([]))
     return
   }
@@ -11399,15 +11399,15 @@ Account.prototype.setStorage = function (trie, key, val, cb) {
 Account.prototype.isEmpty = function () {
   return this.balance.toString('hex') === '' &&
   this.nonce.toString('hex') === '' &&
-  this.stateRoot.toString('hex') === ethUtil.SHA3_RLP.toString('hex') &&
-  this.codeHash.toString('hex') === ethUtil.SHA3_NULL.toString('hex')
+  this.stateRoot.toString('hex') === vapUtil.SHA3_RLP.toString('hex') &&
+  this.codeHash.toString('hex') === vapUtil.SHA3_NULL.toString('hex')
 }
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":165,"ethereumjs-util":33,"rlp":136}],30:[function(require,module,exports){
+},{"buffer":165,"vaporyjs-util":33,"rlp":136}],30:[function(require,module,exports){
 (function (Buffer){
-const utils = require('ethereumjs-util')
-const params = require('ethereum-common')
+const utils = require('vaporyjs-util')
+const params = require('vapory-common')
 const BN = utils.BN
 const rlp = utils.rlp
 /**
@@ -11576,17 +11576,17 @@ BlockHeader.prototype.isGenesis = function () {
 }
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":165,"ethereum-common":27,"ethereumjs-util":33}],31:[function(require,module,exports){
+},{"buffer":165,"vapory-common":27,"vaporyjs-util":33}],31:[function(require,module,exports){
 (function (Buffer){
 require('es6-shim')
-const ethUtil = require('ethereumjs-util')
-const Tx = require('ethereumjs-tx')
+const vapUtil = require('vaporyjs-util')
+const Tx = require('vaporyjs-tx')
 const Trie = require('merkle-patricia-tree')
-const BN = ethUtil.BN
-const rlp = ethUtil.rlp
+const BN = vapUtil.BN
+const rlp = vapUtil.rlp
 const async = require('async')
 const BlockHeader = require('./header')
-const params = require('ethereum-common')
+const params = require('vapory-common')
 
 /**
  * Represents a block
@@ -11714,7 +11714,7 @@ Block.prototype.validateTransactionsTrie = function () {
   if (this.transactions.length) {
     return txT === this.txTrie.root.toString('hex')
   } else {
-    return txT === ethUtil.SHA3_RLP.toString('hex')
+    return txT === vapUtil.SHA3_RLP.toString('hex')
   }
 }
 
@@ -11777,7 +11777,7 @@ Block.prototype.validateUnclesHash = function () {
   })
 
   raw = rlp.encode(raw)
-  return ethUtil.sha3(raw).toString('hex') === this.header.uncleHash.toString('hex')
+  return vapUtil.sha3(raw).toString('hex') === this.header.uncleHash.toString('hex')
 }
 
 Block.prototype.validateUncles = function (blockChain, cb) {
@@ -11840,22 +11840,22 @@ Block.prototype.toJSON = function (labeled) {
     })
     return obj
   } else {
-    return ethUtil.baToJSON(this.raw)
+    return vapUtil.baToJSON(this.raw)
   }
 }
 
 }).call(this,{"isBuffer":require("../../../../../../../usr/local/lib/node_modules/browserify/node_modules/insert-module-globals/node_modules/is-buffer/index.js")})
-},{"../../../../../../../usr/local/lib/node_modules/browserify/node_modules/insert-module-globals/node_modules/is-buffer/index.js":363,"./header":30,"async":24,"es6-shim":26,"ethereum-common":27,"ethereumjs-tx":32,"ethereumjs-util":33,"merkle-patricia-tree":100}],32:[function(require,module,exports){
+},{"../../../../../../../usr/local/lib/node_modules/browserify/node_modules/insert-module-globals/node_modules/is-buffer/index.js":363,"./header":30,"async":24,"es6-shim":26,"vapory-common":27,"vaporyjs-tx":32,"vaporyjs-util":33,"merkle-patricia-tree":100}],32:[function(require,module,exports){
 (function (global,Buffer){
-const ethUtil = require('ethereumjs-util')
-const fees = require('ethereum-common')
+const vapUtil = require('vaporyjs-util')
+const fees = require('vapory-common')
 const ecdsa = require('secp256k1')
-const BN = ethUtil.BN
-const rlp = ethUtil.rlp
+const BN = vapUtil.BN
+const rlp = vapUtil.rlp
 
 // give browser access to Buffers
 global.Buffer = Buffer
-global.ethUtil = ethUtil
+global.vapUtil = vapUtil
 
 /**
  * Represents a transaction
@@ -11924,7 +11924,7 @@ var Transaction = module.exports = function (data) {
     }
   })
 
-  ethUtil.defineProperties(this, fields, data)
+  vapUtil.defineProperties(this, fields, data)
 }
 
 /**
@@ -11956,7 +11956,7 @@ Transaction.prototype.hash = function (signature) {
   }
 
   // create hash
-  return ethUtil.sha3(rlp.encode(toHash))
+  return vapUtil.sha3(rlp.encode(toHash))
 }
 
 /**
@@ -11966,7 +11966,7 @@ Transaction.prototype.hash = function (signature) {
  */
 Transaction.prototype.getSenderAddress = function () {
   const pubKey = this.getSenderPublicKey()
-  return ethUtil.pubToAddress(pubKey)
+  return vapUtil.pubToAddress(pubKey)
 }
 
 /**
@@ -11989,8 +11989,8 @@ Transaction.prototype.getSenderPublicKey = function () {
 Transaction.prototype.verifySignature = function () {
   var msgHash = this.hash(false)
   var sig = {
-    signature: Buffer.concat([ethUtil.pad(this.r, 32), ethUtil.pad(this.s, 32)], 64),
-    recovery: ethUtil.bufferToInt(this.v) - 27
+    signature: Buffer.concat([vapUtil.pad(this.r, 32), vapUtil.pad(this.s, 32)], 64),
+    recovery: vapUtil.bufferToInt(this.v) - 27
   }
 
   try {
@@ -12067,11 +12067,11 @@ Transaction.prototype.getUpfrontCost = function () {
  * @return {Boolean}
  */
 Transaction.prototype.validate = function () {
-  return this.verifySignature() && (Number(this.getBaseFee().toString()) <= ethUtil.bufferToInt(this.gasLimit))
+  return this.verifySignature() && (Number(this.getBaseFee().toString()) <= vapUtil.bufferToInt(this.gasLimit))
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer)
-},{"buffer":165,"ethereum-common":27,"ethereumjs-util":33,"secp256k1":137}],33:[function(require,module,exports){
+},{"buffer":165,"vapory-common":27,"vaporyjs-util":33,"secp256k1":137}],33:[function(require,module,exports){
 (function (Buffer){
 const SHA3 = require('sha3')
 const ec = require('elliptic').ec('secp256k1')
@@ -12246,7 +12246,7 @@ exports.sha3 = function (a, bytes) {
 }
 
 /**
- * Returns the ethereum address of a given public key
+ * Returns the vapory address of a given public key
  * @method pubToAddress
  * @param {Buffer}
  * @return {Buffer}
@@ -12259,7 +12259,7 @@ exports.pubToAddress = exports.publicToAddress = function (pubKey) {
 }
 
 /**
- * Returns the ethereum public key of a given private key
+ * Returns the vapory public key of a given private key
  * @method privateToPublic
  * @param {Buffer} privateKey
  * @return {Buffer}
@@ -12272,7 +12272,7 @@ var privateToPublic = exports.privateToPublic = function (privateKey) {
 }
 
 /**
- * Returns the ethereum address of a given private key
+ * Returns the vapory address of a given private key
  * @method privateToAddress
  * @param {Buffer} privateKey
  * @return {Buffer}
@@ -23803,7 +23803,7 @@ const levelup = require('levelup')
 const memdown = require('memdown')
 const async = require('async')
 const rlp = require('rlp')
-const ethUtil = require('ethereumjs-util')
+const vapUtil = require('vaporyjs-util')
 const semaphore = require('semaphore')
 const TrieNode = require('./trieNode')
 const ReadStream = require('./readStream')
@@ -23816,7 +23816,7 @@ module.exports = Trie
 
 function Trie (db, root) {
   var self = this
-  this.EMPTY_TRIE_ROOT = ethUtil.SHA3_RLP
+  this.EMPTY_TRIE_ROOT = vapUtil.SHA3_RLP
   this.sem = semaphore(1)
 
   // setup dbs
@@ -23831,7 +23831,7 @@ function Trie (db, root) {
   Object.defineProperty(this, 'root', {
     set: function (value) {
       if (value) {
-        value = ethUtil.toBuffer(value)
+        value = vapUtil.toBuffer(value)
         assert(value.length === 32, 'Invalid root length. Roots are 32 bytes')
       } else {
         value = self.EMPTY_TRIE_ROOT
@@ -23855,7 +23855,7 @@ function Trie (db, root) {
 Trie.prototype.get = function (key, cb) {
   var self = this
 
-  key = ethUtil.toBuffer(key)
+  key = vapUtil.toBuffer(key)
 
   self._findPath(key, function (err, node, remainder, stack) {
     var value = null
@@ -23876,8 +23876,8 @@ Trie.prototype.get = function (key, cb) {
 Trie.prototype.put = function (key, value, cb) {
   var self = this
 
-  key = ethUtil.toBuffer(key)
-  value = ethUtil.toBuffer(value)
+  key = vapUtil.toBuffer(key)
+  value = vapUtil.toBuffer(value)
 
   if (!value || value.toString() === '') {
     self.del(key, cb)
@@ -23885,7 +23885,7 @@ Trie.prototype.put = function (key, value, cb) {
     cb = callTogether(cb, self.sem.leave)
 
     self.sem.take(function () {
-      if (self.root.toString('hex') !== ethUtil.SHA3_RLP.toString('hex')) {
+      if (self.root.toString('hex') !== vapUtil.SHA3_RLP.toString('hex')) {
         // first try to find the give key or its nearst node
         self._findPath(key, function (err, foundValue, keyRemainder, stack) {
           if (err) {
@@ -23905,7 +23905,7 @@ Trie.prototype.put = function (key, value, cb) {
 Trie.prototype.del = function (key, cb) {
   var self = this
 
-  key = ethUtil.toBuffer(key)
+  key = vapUtil.toBuffer(key)
   cb = callTogether(cb, self.sem.leave)
 
   self.sem.take(function () {
@@ -23928,7 +23928,7 @@ Trie.prototype.del = function (key, cb) {
  * @param {Buffer} key
  */
 Trie.prototype.getRaw = function (key, cb) {
-  key = ethUtil.toBuffer(key)
+  key = vapUtil.toBuffer(key)
 
   function dbGet (db, cb2) {
     db.get(key, {
@@ -24206,7 +24206,7 @@ Trie.prototype._walkTrie = function (root, onNode, onDone) {
   var aborted = false
   var returnValues = []
 
-  if (root.toString('hex') === ethUtil.SHA3_RLP.toString('hex')) {
+  if (root.toString('hex') === vapUtil.SHA3_RLP.toString('hex')) {
     return onDone()
   }
 
@@ -24490,13 +24490,13 @@ Trie.prototype.batch = function (ops, cb) {
  * @param {Function} cb
  */
 Trie.prototype.checkRoot = function (root, cb) {
-  root = ethUtil.toBuffer(root)
+  root = vapUtil.toBuffer(root)
   this._lookupNode(root, function (value) {
     cb(null, !!value)
   })
 }
 
-},{"./readStream":131,"./trieNode":134,"./util":135,"assert":163,"async":24,"ethereumjs-util":33,"levelup":63,"memdown":89,"rlp":136,"semaphore":130}],99:[function(require,module,exports){
+},{"./readStream":131,"./trieNode":134,"./util":135,"assert":163,"async":24,"vaporyjs-util":33,"levelup":63,"memdown":89,"rlp":136,"semaphore":130}],99:[function(require,module,exports){
 const levelup = require('levelup')
 const memdown = require('memdown')
 const async = require('async')
@@ -28758,7 +28758,7 @@ TrieReadStream.prototype._read = function () {
 }
 
 },{"./trieNode":134,"readable-stream":129,"util":383}],132:[function(require,module,exports){
-const ethUtil = require('ethereumjs-util')
+const vapUtil = require('vaporyjs-util')
 
 module.exports = secureInterface
 
@@ -28778,7 +28778,7 @@ function copy (_super) {
 }
 
 function get (_super, key, cb) {
-  var hash = ethUtil.sha3(key)
+  var hash = vapUtil.sha3(key)
   _super(hash, cb)
 }
 
@@ -28788,17 +28788,17 @@ function put (_super, key, val, cb) {
   if (!val) {
     this.del(key, cb)
   } else {
-    var hash = ethUtil.sha3(key)
+    var hash = vapUtil.sha3(key)
     _super(hash, val, cb)
   }
 }
 
 function del (_super, key, cb) {
-  var hash = ethUtil.sha3(key)
+  var hash = vapUtil.sha3(key)
   _super(hash, cb)
 }
 
-},{"ethereumjs-util":33}],133:[function(require,module,exports){
+},{"vaporyjs-util":33}],133:[function(require,module,exports){
 const CheckpointTrie = require('./index')
 const secureInterface = require('./secure-interface')
 const inherits = require('util').inherits
@@ -28814,7 +28814,7 @@ function SecureTrie () {
 },{"./index":100,"./secure-interface":132,"util":383}],134:[function(require,module,exports){
 (function (Buffer){
 const rlp = require('rlp')
-const ethUtil = require('ethereumjs-util')
+const vapUtil = require('vaporyjs-util')
 
 module.exports = TrieNode
 
@@ -28927,7 +28927,7 @@ TrieNode.prototype.serialize = function () {
 }
 
 TrieNode.prototype.hash = function () {
-  return ethUtil.sha3(this.serialize())
+  return vapUtil.sha3(this.serialize())
 }
 
 TrieNode.prototype.toString = function () {
@@ -29070,7 +29070,7 @@ function isRawNode (node) {
 }
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":165,"ethereumjs-util":33,"rlp":136}],135:[function(require,module,exports){
+},{"buffer":165,"vaporyjs-util":33,"rlp":136}],135:[function(require,module,exports){
 (function (process){
 const async = require('async')
 
@@ -29156,7 +29156,7 @@ function asyncFirstSeries (array, iterator, cb) {
 (function (Buffer){
 const assert = require('assert')
 /**
- * RLP Encoding based on: https://github.com/ethereum/wiki/wiki/%5BEnglish%5D-RLP
+ * RLP Encoding based on: https://github.com/vaporyco/wiki/wiki/%5BEnglish%5D-RLP
  * This function takes in a data, convert it to buffer if not, and a length for recursion
  *
  * @param {Buffer,String,Integer,Array} data - will be converted to buffer
@@ -29200,7 +29200,7 @@ function encodeLength (len, offset) {
 }
 
 /**
- * RLP Decoding based on: {@link https://github.com/ethereum/wiki/wiki/%5BEnglish%5D-RLP|RLP}
+ * RLP Decoding based on: {@link https://github.com/vaporyco/wiki/wiki/%5BEnglish%5D-RLP|RLP}
  * @param {Buffer,String,Integer,Array} data - will be converted to buffer
  * @returns {Array} - returns decode Array of Buffers containg the original message
  **/

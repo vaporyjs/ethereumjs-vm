@@ -1,22 +1,23 @@
 {
-  "name": "ethereumjs-vm",
+  "name": "vaporyjs-vm",
+  "namespace": "vaporyjs"
   "version": "1.3.0",
-  "description": "an ethereum VM implementation",
+  "description": "a vapory VM implementation",
   "main": "index.js",
   "dependencies": {
     "async": "^1.4.2",
     "async-eventemitter": "^0.2.2",
-    "ethereum-common": "0.0.16",
-    "ethereumjs-account": "^2.0.2",
-    "ethereumjs-block": "^1.2.2",
-    "ethereumjs-util": "^4.0.1",
+    "vapory-common": "0.0.16",
+    "vaporyjs-account": "^2.0.2",
+    "vaporyjs-block": "^1.2.2",
+    "vaporyjs-util": "^4.0.1",
     "functional-red-black-tree": "^1.0.1",
     "merkle-patricia-tree": "^2.1.2"
   },
   "devDependencies": {
-    "ethereumjs-blockchain": "^1.4.1",
-    "ethereumjs-testing": "0.0.1",
-    "ethereumjs-tx": "1.1.0",
+    "vaporyjs-blockchain": "^1.4.1",
+    "vaporyjs-testing": "0.0.1",
+    "vaporyjs-tx": "1.1.0",
     "level": "^1.4.0",
     "leveldown": "^1.4.2",
     "levelup": "^1.3.0",
@@ -26,7 +27,7 @@
     "tape": "^4.2.0"
   },
   "scripts": {
-    "build": "browserify --s EthVm index.js > ./dist/ethereumjs-vm.js",
+    "build": "browserify --s VapVm index.js > ./dist/vaporyjs-vm.js",
     "testVM": "./tests/tester -v",
     "testState": "./tests/tester -s",
     "testBlockchain": "./tests/tester -b",
@@ -35,10 +36,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ethereumjs/ethereumjs-vm.git"
+    "url": "git+https://github.com/vaporyjs/vaporyjs-vm.git"
   },
   "keywords": [
-    "ethereum",
+    "vapory",
     "VM"
   ],
   "author": "mjbecze <mjbecze@gmail.com>",
@@ -47,9 +48,9 @@
   ],
   "license": "MPL-2.0",
   "bugs": {
-    "url": "https://github.com/ethereumjs/ethereumjs-vm/issues"
+    "url": "https://github.com/vaporyjs/vaporyjs-vm/issues"
   },
-  "homepage": "https://github.com/ethereumjs/ethereumjs-vm",
+  "homepage": "https://github.com/vaporyjs/vaporyjs-vm",
   "standard": {
     "ignore": [
       "dist/**",

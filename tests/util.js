@@ -1,11 +1,11 @@
 const async = require('async')
-const utils = require('ethereumjs-util')
+const utils = require('vaporyjs-util')
 const BN = utils.BN
 const rlp = utils.rlp
-const Account = require('ethereumjs-account')
-const Transaction = require('ethereumjs-tx')
-const Block = require('ethereumjs-block')
-const Header = require('ethereumjs-block/header.js')
+const Account = require('vaporyjs-account')
+const Transaction = require('vaporyjs-tx')
+const Block = require('vaporyjs-block')
+const Header = require('vaporyjs-block/header.js')
 
 exports.dumpState = function (state, cb) {
   var rs = state.createReadStream()
