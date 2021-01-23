@@ -7,11 +7,11 @@
 
 var async = require('async')
 var VM = require('./../../index.js')
-var Account = require('ethereumjs-account')
-var Transaction = require('ethereumjs-tx')
-var Trie = require('merkle-patricia-tree')
+var Account = require('vaporyjs-account')
+var Transaction = require('vaporyjs-tx')
+var Trie = require('@vaporyjs/merkle-patricia-tree')
 var rlp = require('rlp')
-var utils = require('ethereumjs-util')
+var utils = require('vaporyjs-util')
 
 // creating a trie that just resides in memory
 var stateTrie = new Trie()

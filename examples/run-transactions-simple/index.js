@@ -1,5 +1,5 @@
 /*
- * Example - Running code on an ethereum-vm
+ * Example - Running code on an vapory-vm
  *
  *
  * To run this example in the browser, use the pre-bundled
