@@ -33795,27 +33795,27 @@ module.exports = params
 },{"./bootstrapNodes.json":108,"./genesisState.json":109,"./params.json":111}],111:[function(require,module,exports){
 module.exports={
   "genesisGasLimit": {
-    "v": 5000,
+    "v": 16609799,
     "d": "Gas limit of the Genesis block."
   },
   "genesisDifficulty": {
-    "v": 17179869184,
+    "v": 1048576,
     "d": "Difficulty of the Genesis block."
   },
   "genesisNonce": {
-    "v": "0x0000000000000042",
+    "v": "0x0000000770000000",
     "d": "the geneis nonce"
   },
   "genesisExtraData": {
-    "v": "0x11bbe8db4e347b4e8c937c1c8370e4b5ed33adb3db69cbdb7a38e1e50b1b82fa",
+    "v": "0xb272d27cef629a8487e50db5ae5310ee01da9862f4a3d6a1cfdeb22774b8e3ec",
     "d": "extra data "
   },
   "genesisHash": {
-    "v": "0xd4e56740f876aef8c010b86a40d5f56745a118d0906a34e69aec8c0db1cb8fa3",
+    "v": "0x75dd653dffde2f78b9425eadf8f9cd79a0b7b0a9e89d9fc4596db941ad0b2974",
     "d": "genesis hash"
   },
   "genesisStateRoot": {
-    "v": "0xd7f8974fb5ac78d9ac099b9ad5018bedc2ce0a72dad1827a1709da30580f0544",
+    "v": "0x37347c5a42a09598f868c05b1840a15d3ade340ce0c0bc939f2429175b9f3c5d",
     "d": "the genesis state root"
   },
   "minGasLimit": {
@@ -34702,27 +34702,27 @@ function arrayToString(array) {
 },{"./header":113,"async":63,"buffer":4,"vapory-common/params.json":115,"vaporyjs-tx":116,"vaporyjs-util":117,"merkle-patricia-tree":212}],115:[function(require,module,exports){
 module.exports={
   "genesisGasLimit": {
-    "v": 5000,
+    "v": 16609799,
     "d": "Gas limit of the Genesis block."
   },
   "genesisDifficulty": {
-    "v": 17179869184,
+    "v": 1048576,
     "d": "Difficulty of the Genesis block."
   },
   "genesisNonce": {
-    "v": "0x0000000000000042",
+    "v": "0x0000000770000000",
     "d": "the geneis nonce"
   },
   "genesisExtraData": {
-    "v": "0x11bbe8db4e347b4e8c937c1c8370e4b5ed33adb3db69cbdb7a38e1e50b1b82fa",
+    "v": "0xb272d27cef629a8487e50db5ae5310ee01da9862f4a3d6a1cfdeb22774b8e3ec",
     "d": "extra data "
   },
   "genesisHash": {
-    "v": "0xd4e56740f876aef8c010b86a40d5f56745a118d0906a34e69aec8c0db1cb8fa3",
+    "v": "0x75dd653dffde2f78b9425eadf8f9cd79a0b7b0a9e89d9fc4596db941ad0b2974",
     "d": "genesis hash"
   },
   "genesisStateRoot": {
-    "v": "0xd7f8974fb5ac78d9ac099b9ad5018bedc2ce0a72dad1827a1709da30580f0544",
+    "v": "0x37347c5a42a09598f868c05b1840a15d3ade340ce0c0bc939f2429175b9f3c5d",
     "d": "the genesis state root"
   },
   "minGasLimit": {

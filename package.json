@@ -1,7 +1,7 @@
 {
   "name": "vaporyjs-vm",
   "namespace": "vaporyjs",
-  "version": "2.3.3",
+  "version": "2.3.3-a",
   "description": "an vapory VM implementation",
   "main": "index.js",
   "dependencies": {
@@ -21,7 +21,7 @@
     "babel-preset-es2015": "^6.24.0",
     "babelify": "^7.3.0",
     "vaporyjs-blockchain": "2.1.0",
-    "vaporyjs-testing": "1.0.4",
+    "vaporyjs-testing": "1.0.4-a",
     "vaporyjs-tx": "1.3.3",
     "level": "6.0.1",
     "leveldown": "5.6.0",
