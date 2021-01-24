@@ -1,4 +1,4 @@
-const genesisData = require('ethereumjs-testing').getSingleFile('BasicTests/genesishashestest.json')
+const genesisData = require('vaporyjs-testing').getSingleFile('BasicTests/genesishashestest.json')
 const tape = require('tape')
 const VM = require('../')
 

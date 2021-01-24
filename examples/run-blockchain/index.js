@@ -1,13 +1,13 @@
 const Buffer = require('safe-buffer').Buffer // use for Node.js <4.5.0
 const async = require('async')
-const Trie = require('merkle-patricia-tree/secure')
-const Block = require('ethereumjs-block')
-const Blockchain = require('ethereumjs-blockchain')
-const BlockHeader = require('ethereumjs-block/header.js')
+const Trie = require('@vaporyjs/merkle-patricia-tree/secure')
+const Block = require('vaporyjs-block')
+const Blockchain = require('vaporyjs-blockchain')
+const BlockHeader = require('vaporyjs-block/header.js')
 const VM = require('../../')
 const Level = require('levelup')
-const Account = require('ethereumjs-account')
-const utils = require('ethereumjs-util')
+const Account = require('vaporyjs-account')
+const utils = require('vaporyjs-util')
 const BN = utils.BN
 const rlp = utils.rlp
 const testData = require('./test-data')
@@ -17,7 +17,7 @@ var blockchainDB = new Level('', { db: require('memdown') })
 var state = new Trie()
 
 var blockchain = new Blockchain(blockchainDB)
-blockchain.ethash.cacheDB = new Level('./.cachedb')
+blockchain.vapash.cacheDB = new Level('./.cachedb')
 
 var vm = new VM({
   state: state,
