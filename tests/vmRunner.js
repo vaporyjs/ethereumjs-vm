@@ -1,10 +1,10 @@
-const async = require('async')
-const VM = require('../')
-const Account = require('vaporyjs-account')
-const testUtil = require('./util')
-const Trie = require('@vaporyjs/merkle-patricia-tree/secure')
-const vapUtil = require('vaporyjs-util')
-const BN = vapUtil.BN
+var async = require('async')
+var VM = require('../index')
+var Account = require('vaporyjs-account')
+var testUtil = require('./util')
+var Trie = require('@vaporyjs/merkle-patricia-tree/secure')
+var vapUtil = require('vaporyjs-util')
+var BN = vapUtil.BN
 
 module.exports = function runStateTest (options, testData, t, cb) {
   var sstream = false
