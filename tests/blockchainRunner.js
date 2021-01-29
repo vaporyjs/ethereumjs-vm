@@ -6,7 +6,7 @@ const Block = require('vaporyjs-block')
 const Blockchain = require('vaporyjs-blockchain')
 const BlockHeader = require('vaporyjs-block/header.js')
 const VM = require('../')
-const Level = require('levelup')
+const Level = require('level')
 
 var cacheDB = new Level('./.cachedb')
 module.exports = function runBlockchainTest (options, testData, t, cb) {
@@ -50,7 +50,7 @@ module.exports = function runBlockchainTest (options, testData, t, cb) {
     function (done) {
       async.eachSeries(testData.blocks, function (raw, cb) {
         try {
-          var block = new Block(new Buffer(raw.rlp.slice(2), 'hex'))
+          var block = new Block(Buffer.from(raw.rlp.slice(2), 'hex'))
           // forces the block into thinking they are homestead
           if (testData.homestead) {
             block.header.isHomestead = function () {
