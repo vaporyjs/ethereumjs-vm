@@ -6,7 +6,7 @@ var VM = require('../index.js')
 var vm = new VM()
 var code = '7f4e616d65526567000000000000000000000000000000000000000000000000003055307f4e616d6552656700000000000000000000000000000000000000000000000000557f436f6e666967000000000000000000000000000000000000000000000000000073661005d2720d855f1d9976f88bb10c1a3398c77f5573661005d2720d855f1d9976f88bb10c1a3398c77f7f436f6e6669670000000000000000000000000000000000000000000000000000553360455560df806100c56000396000f3007f726567697374657200000000000000000000000000000000000000000000000060003514156053576020355415603257005b335415603e5760003354555b6020353360006000a233602035556020353355005b60007f756e72656769737465720000000000000000000000000000000000000000000060003514156082575033545b1560995733335460006000a2600033545560003355005b60007f6b696c6c00000000000000000000000000000000000000000000000000000000600035141560cb575060455433145b1560d25733ff5b6000355460005260206000f3'
 
-code = new Buffer(code, 'hex')
+code = Buffer.from(code, 'hex')
 
 vm.on('step', function (data) {
   console.log(data.opcode.name)
@@ -14,7 +14,7 @@ vm.on('step', function (data) {
 
 vm.runCode({
   code: code,
-  gasLimit: new Buffer('ffffffff', 'hex')
+  gasLimit: Buffer.from('ffffffff', 'hex')
 }, function (err, results) {
   console.log('returned: ' + results.return.toString('hex'))
   console.log('gasUsed: ' + results.gasUsed.toString())
@@ -93,7 +93,7 @@ Bloom.prototype.multiCheck = function (topics) {
   var match = true
   topics.forEach(function (t) {
     if (!Buffer.isBuffer(t)) {
-      t = new Buffer(t, 'hex')
+      t = Buffer.from(t, 'hex')
     }
 
     match && self.check(t)
@@ -172,7 +172,7 @@ Cache.prototype.getOrLoad = function (key, cb) {
     var raw = account && account.isEmpty() ? null : account.raw
     cb(null, account, raw)
   } else {
-    this._trie.get(new Buffer(key, 'hex'), function (err, raw) {
+    this._trie.get(Buffer.from(key, 'hex'), function (err, raw) {
       var account = new Account(raw)
       self._cache = self._cache.insert(key, {
         val: account,
@@ -195,7 +195,7 @@ Cache.prototype.flush = function (cb) {
       it.value.modified = false
       it.value.val = it.value.val.serialize()
 
-      self._trie.put(new Buffer(it.key, 'hex'), it.value.val, function () {
+      self._trie.put(Buffer.from(it.key, 'hex'), it.value.val, function () {
         next = it.hasNext
         it.next()
         done()
@@ -253,7 +253,7 @@ var utils = require('vaporyjs-util')
 
 module.exports = {
   getBlock: function (n, cb) {
-    var hash = utils.sha3(new Buffer(utils.bufferToInt(n).toString()))
+    var hash = utils.sha3(Buffer.from(utils.bufferToInt(n).toString()))
 
     var block = {
       hash: function () {
@@ -359,7 +359,7 @@ VM.prototype.populateCache = function (addresses, cb) {
 //       depth: info.depth,
 //       opcode: info.opcode,
 //       gas: info.gasLeft.toString(),
-//       memory: (new Buffer(info.memory)).toString('hex'),
+//       memory: (Buffer.from(info.memory)).toString('hex'),
 //       storage: [],
 //       address: info.address.toString('hex')
 //     }
@@ -513,14 +513,14 @@ module.exports = {
     runState.stopped = true
   },
   ADD: function (a, b, runState) {
-    return new Buffer(
+    return Buffer.from(
       new BN(a)
         .add(new BN(b))
         .mod(utils.TWO_POW256)
         .toArray())
   },
   MUL: function (a, b, runState) {
-    return new Buffer(
+    return Buffer.from(
       new BN(a)
         .mul(new BN(b)).mod(utils.TWO_POW256)
         .toArray()
@@ -541,7 +541,7 @@ module.exports = {
     } else {
       r = a.div(b).toArray()
     }
-    return new Buffer(r)
+    return Buffer.from(r)
   },
   SDIV: function (a, b, runState) {
     a = utils.fromSigned(a)
@@ -549,7 +549,7 @@ module.exports = {
 
     var r
     if (b.toString() === '0') {
-      r = new Buffer([0])
+      r = Buffer.from([0])
     } else {
       r = utils.toUnsigned(a.div(b))
     }
@@ -567,7 +567,7 @@ module.exports = {
       r = a.mod(b).toArray()
     }
 
-    return new Buffer(r)
+    return Buffer.from(r)
   },
   SMOD: function (a, b, runState) {
     a = utils.fromSigned(a)
@@ -575,7 +575,7 @@ module.exports = {
     var r
 
     if (b.toString() === '0') {
-      r = new Buffer([0])
+      r = Buffer.from([0])
     } else {
       r = a.abs().mod(b.abs())
       if (a.sign) {
@@ -597,7 +597,7 @@ module.exports = {
       r = a.mod(c).toArray()
     }
 
-    return new Buffer(r)
+    return Buffer.from(r)
   },
   MULMOD: function (a, b, c, runState) {
     a = new BN(a).mul(new BN(b))
@@ -610,7 +610,7 @@ module.exports = {
       r = a.mod(c).toArray()
     }
 
-    return new Buffer(r)
+    return Buffer.from(r)
   },
   EXP: function (base, exponent, runState) {
     base = new BN(base)
@@ -623,9 +623,9 @@ module.exports = {
     if (exponent.cmpn(0) !== 0) {
       var bytes = 1 + logTable(exponent)
       subGas(runState, new BN(bytes).muln(fees.expByteGas.v))
-      result = new Buffer(base.redPow(exponent).toArray())
+      result = Buffer.from(base.redPow(exponent).toArray())
     } else {
-      result = new Buffer([1])
+      result = Buffer.from([1])
     }
 
     return result
@@ -635,7 +635,7 @@ module.exports = {
     var extendOnes = false
 
     if (k.cmpn(31) <= 0) {
-      var val = new Buffer(32)
+      var val = Buffer.from(32)
       utils.pad(runState.stack.pop(), 32).copy(val)
 
       if (val[31 - k] & 0x80) {
@@ -652,27 +652,27 @@ module.exports = {
   },
   // 0x10 range - bit ops
   LT: function (a, b, runState) {
-    return new Buffer([
+    return Buffer.from([
       new BN(a)
         .cmp(new BN(b)) === -1
     ])
   },
   GT: function (a, b, runState) {
-    return new Buffer([
+    return Buffer.from([
       new BN(a)
         .cmp(new BN(b)) === 1
     ])
   },
   SLT: function (a, b, runState) {
     runState.stack.push(
-      new Buffer([
+      Buffer.from([
         utils.fromSigned(a)
           .cmp(utils.fromSigned(b)) === -1
       ])
     )
   },
   SGT: function (a, b, runState) {
-    return new Buffer([
+    return Buffer.from([
       utils.fromSigned(a)
         .cmp(utils.fromSigned(b)) === 1
     ])
@@ -680,14 +680,14 @@ module.exports = {
   EQ: function (a, b, runState) {
     a = utils.unpad(a)
     b = utils.unpad(b)
-    return new Buffer([a.toString('hex') === b.toString('hex')])
+    return Buffer.from([a.toString('hex') === b.toString('hex')])
   },
   ISZERO: function (a, runState) {
     a = utils.bufferToInt(a)
-    return new Buffer([!a])
+    return Buffer.from([!a])
   },
   AND: function (a, b, runState) {
-    return new Buffer((
+    return Buffer.from((
     new BN(a)
       .and(
         new BN(b)
@@ -696,7 +696,7 @@ module.exports = {
       .toArray())
   },
   OR: function (a, b, runState) {
-    return new Buffer((
+    return Buffer.from((
     new BN(a)
       .or(
         new BN(b)
@@ -705,7 +705,7 @@ module.exports = {
       .toArray())
   },
   XOR: function (a, b, runState) {
-    return new Buffer((
+    return Buffer.from((
     new BN(a)
       .xor(
         new BN(b)
@@ -714,7 +714,7 @@ module.exports = {
       .toArray())
   },
   NOT: function (a, runState) {
-    return new Buffer(utils.TWO_POW256.subn(1).sub(new BN(a))
+    return Buffer.from(utils.TWO_POW256.subn(1).sub(new BN(a))
       .toArray())
   },
   BYTE: function (pos, word, runState) {
@@ -725,7 +725,7 @@ module.exports = {
     if (pos < 32) {
       byte = utils.intToBuffer(word[pos])
     } else {
-      byte = new Buffer([0])
+      byte = Buffer.from([0])
     }
 
     return byte
@@ -763,18 +763,18 @@ module.exports = {
     return runState.caller
   },
   CALLVALUE: function (runState) {
-    return new Buffer(runState.callValue.toArray())
+    return Buffer.from(runState.callValue.toArray())
   },
   CALLDATALOAD: function (pos, runState) {
     pos = utils.bufferToInt(pos)
     var loaded = runState.callData.slice(pos, pos + 32)
 
-    loaded = loaded.length ? loaded : new Buffer([0])
+    loaded = loaded.length ? loaded : Buffer.from([0])
 
     // pad end
     if (loaded.length < 32) {
       var dif = 32 - loaded.length
-      var pad = new Buffer(dif)
+      var pad = Buffer.from(dif)
       pad.fill(0)
       loaded = Buffer.concat([loaded, pad], 32)
     }
@@ -783,7 +783,7 @@ module.exports = {
   },
   CALLDATASIZE: function (runState) {
     if (runState.callData.length === 1 && runState.callData[0] === 0) {
-      return new Buffer([0])
+      return Buffer.from([0])
     } else {
       return utils.intToBuffer(runState.callData.length)
     }
@@ -829,7 +829,7 @@ module.exports = {
     subGas(runState, fee)
 
     stateManager.getContractCode(address, function (err, code) {
-      code = err ? new Buffer([0]) : code
+      code = err ? Buffer.from([0]) : code
       memStore(runState, memOffset, code, codeOffset, length, false)
       cb(err)
     })
@@ -845,14 +845,14 @@ module.exports = {
 
     // block lookups must be within the past 256 blocks
     if (diff > 256 || diff <= 0) {
-      cb(null, new Buffer([0]))
+      cb(null, Buffer.from([0]))
       return
     }
 
     stateManager.getBlockHash(number, function (err, blockHash) {
       if (err) {
         // if we are at a low block height and request a blockhash before the genesis block
-        cb(null, new Buffer([0]))
+        cb(null, Buffer.from([0]))
       } else {
         cb(null, blockHash)
       }
@@ -897,7 +897,7 @@ module.exports = {
 
     stateManager.getContractStorage(runState.address, key, function (err, value) {
       var loaded = rlp.decode(value)
-      loaded = loaded.length ? loaded : new Buffer([0])
+      loaded = loaded.length ? loaded : Buffer.from([0])
       cb(err, loaded)
     })
   },
@@ -967,7 +967,7 @@ module.exports = {
     return utils.intToBuffer(runState.memoryWordCount * 32)
   },
   GAS: function (runState) {
-    return new Buffer(runState.gasLeft.toArray())
+    return Buffer.from(runState.gasLeft.toArray())
   },
   JUMPDEST: function (runState) {},
   PUSH: function (runState) {
@@ -1160,7 +1160,7 @@ module.exports = {
         cb(err)
         return
       }
-      var newBalance = new Buffer(new BN(contract.balance).add(new BN(toAccount.balance)).toArray())
+      var newBalance = Buffer.from(new BN(contract.balance).add(new BN(toAccount.balance)).toArray())
       async.series([
         stateManager.putAccountBalance.bind(stateManager, suicideToAddress, newBalance),
         stateManager.putAccountBalance.bind(stateManager, contractAddress, new BN(0))
@@ -1231,7 +1231,7 @@ function memLoad (runState, offset, length) {
   for (var i = loaded.length; i < length; i++) {
     loaded.push(0)
   }
-  return new Buffer(loaded)
+  return Buffer.from(loaded)
 }
 
 /**
@@ -1291,7 +1291,7 @@ function makeCall (runState, callOptions, localOpts, cb) {
 
   // check if account has enough vapor
   if (runState.depth >= fees.stackLimit.v || new BN(runState.contract.balance).cmp(callOptions.value) === -1) {
-    runState.stack.push(new Buffer([0]))
+    runState.stack.push(Buffer.from([0]))
     cb()
   } else {
     // if creating a new contract then increament the nonce
@@ -1332,7 +1332,7 @@ function makeCall (runState, callOptions, localOpts, cb) {
         if (results.createdAddress) {
           cb(err, results.createdAddress)
         } else {
-          cb(err, new Buffer([results.vm.exception]))
+          cb(err, Buffer.from([results.vm.exception]))
         }
       })
     } else {
@@ -1341,7 +1341,7 @@ function makeCall (runState, callOptions, localOpts, cb) {
         runState.contract.nonce = new BN(runState.contract.nonce).sub(new BN(1))
       }
 
-      cb(err, new Buffer([results.vm.exception]))
+      cb(err, Buffer.from([results.vm.exception]))
     }
   }
 }
@@ -1572,7 +1572,7 @@ module.exports = function (opts) {
 
   results.gasUsed = gasCost
 
-  buf = new Buffer(128)
+  buf = Buffer.from(128)
   buf.fill(0)
   data = Buffer.concat([opts.data, buf])
 
@@ -1617,7 +1617,7 @@ module.exports = function (opts) {
   }
 
   hashStr = sha256.update(data).digest('hex')
-  results.return = new Buffer(hashStr, 'hex')
+  results.return = Buffer.from(hashStr, 'hex')
   results.exception = 1;
 
   return results;
@@ -1663,7 +1663,7 @@ module.exports = function(opts){
   hashStr = vapUtil.pad(ripemd160.update(data).digest('bin'), 32) // nb: bin
 
   results.exception = 1
-  results['return'] = new Buffer(hashStr, 'hex')
+  results['return'] = Buffer.from(hashStr, 'hex')
 
   return results
 }
@@ -1815,7 +1815,7 @@ module.exports = function (opts, cb) {
         var txLogs = result.vm.logs || []
         var rawTxReceipt = [
           self.trie.root,
-          new Buffer(gasUsed.toArray()),
+          Buffer.from(gasUsed.toArray()),
           result.bloom.bitvector,
           txLogs
         ]
@@ -2121,7 +2121,7 @@ module.exports = function (opts, cb) {
         if (totalGas.cmp(gasLimit) <= 0) {
           results.gasUsed = totalGas
         } else {
-          results.return = new Buffer([])
+          results.return = Buffer.from([])
         }
       }
 
@@ -2225,11 +2225,11 @@ module.exports = function (opts, cb) {
     depth: opts.depth || 0,
     suicides: opts.suicides || {},
     block: opts.block || new Block(),
-    callValue: opts.value || new Buffer([0]),
+    callValue: opts.value || Buffer.from([0]),
     address: opts.address || utils.zeros(32),
     caller: opts.caller || utils.zeros(32),
     origin: opts.origin || opts.caller || utils.zeros(32),
-    callData: opts.data || new Buffer([0]),
+    callData: opts.data || Buffer.from([0]),
     code: opts.code,
     populateCache: opts.populateCache === undefined ? true : opts.populateCache
   }
@@ -2369,7 +2369,7 @@ module.exports = function (opts, cb) {
       exceptionError: err,
       logs: runState.logs,
       gas: runState.gasLeft,
-      'return': runState.returnValue ? runState.returnValue : new Buffer([])
+      'return': runState.returnValue ? runState.returnValue : Buffer.from([])
     }
 
     if (results.exceptionError) {
@@ -2600,7 +2600,7 @@ module.exports = function (opts, cb) {
       var keys = Object.keys(results.vm.suicides)
 
       keys.forEach(function (s) {
-        self.stateManager.cache.del(new Buffer(s, 'hex'))
+        self.stateManager.cache.del(Buffer.from(s, 'hex'))
       })
 
       cb(err)
@@ -2705,7 +2705,7 @@ proto.getAccount = function (address, cb) {
 // saves the account
 proto._putAccount = function (address, account, cb) {
   var self = this
-  var addressHex = new Buffer(address, 'hex')
+  var addressHex = Buffer.from(address, 'hex')
   // TODO: dont save newly created accounts that have no balance
   // if (toAccount.balance.toString('hex') === '00') {
   // if they have money or a non-zero nonce or code, then write to tree
@@ -2894,7 +2894,7 @@ proto.warmCache = function (addresses, cb) {
   })
 
   async.eachSeries(accountArr, function (addressHex, done) {
-    var address = new Buffer(addressHex, 'hex')
+    var address = Buffer.from(addressHex, 'hex')
     self._lookupAccount(address, function (err, account) {
       self.cache.put(address, account, true)
       done(err)
@@ -2924,9 +2924,9 @@ proto.generateGenesis = function (initState, cb) {
   var self = this
   var addresses = Object.keys(initState)
   async.eachSeries(addresses, function (address, done) {
-    // address = new Buffer(address, 'hex')
+    // address = Buffer.from(address, 'hex')
     // console.log(address)
-    var balance = new Buffer((new BN(initState[address])).toArray())
+    var balance = Buffer.from((new BN(initState[address])).toArray())
     self.putAccountBalance(address, balance, done)
   }, function () {
     self.cache.flush(cb)
@@ -8203,7 +8203,7 @@ var hash = function (bitcount) {
 }
 
 hash.prototype.update = function (i) {
-  this.content = Buffer.isBuffer(i) ? i : new Buffer(i);
+  this.content = Buffer.isBuffer(i) ? i : Buffer.from(i);
 }
 
 hash.prototype.digest = function (encoding) {
@@ -8211,7 +8211,7 @@ hash.prototype.digest = function (encoding) {
   if(encoding === 'hex')
     return result
   else
-    return new Buffer(result, 'hex').toString('binary')
+    return Buffer.from(result, 'hex').toString('binary')
 }
 
 module.exports = {
@@ -16276,10 +16276,10 @@ var Account = module.exports = function (data) {
   // Define Properties
   var fields = [{
     name: 'nonce',
-    default: new Buffer([])
+    default: Buffer.from([])
   }, {
     name: 'balance',
-    default: new Buffer([])
+    default: Buffer.from([])
   }, {
     name: 'stateRoot',
     length: 32,
@@ -16313,7 +16313,7 @@ Account.isPrecompiled = Account.prototype.isPrecompiled = function (address) {
 
 Account.prototype.getCode = function (state, cb) {
   if (this.codeHash.toString('hex') === vapUtil.SHA3_NULL.toString('hex')) {
-    cb(null, new Buffer([]))
+    cb(null, Buffer.from([]))
     return
   }
 
@@ -16338,10 +16338,10 @@ Account.prototype.setCode = function (trie, code, compiled, cb) {
   }
 
   // set the compile flag
-  code = Buffer.concat([new Buffer([compiled]), code])
+  code = Buffer.concat([Buffer.from([compiled]), code])
 
   if (this.codeHash.toString('hex') === vapUtil.SHA3_NULL) {
-    cb(null, new Buffer([]))
+    cb(null, Buffer.from([]))
     return
   }
 
@@ -16388,13 +16388,13 @@ exports.MAX_INTEGER = new BN('ffffffffffffffffffffffffffffffffffffffffffffffffff
 exports.TWO_POW256 = new BN('115792089237316195423570985008687907853269984665640564039457584007913129639936')
 
 // hex string of SHA3-256 hash of `null`
-exports.SHA3_NULL = new Buffer('c5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470', 'hex')
+exports.SHA3_NULL = Buffer.from('c5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470', 'hex')
 
 // SHA3-256 hash of the rlp of []
-exports.SHA3_RLP_ARRAY = new Buffer('1dcc4de8dec75d7aab85b567b6ccd41ad312451b948a7413f0a142fd40d49347', 'hex')
+exports.SHA3_RLP_ARRAY = Buffer.from('1dcc4de8dec75d7aab85b567b6ccd41ad312451b948a7413f0a142fd40d49347', 'hex')
 
 // SHA3-256 hash of the rlp of `null`
-exports.SHA3_RLP = new Buffer('56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421', 'hex')
+exports.SHA3_RLP = Buffer.from('56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421', 'hex')
 
 exports.BN = BN
 exports.rlp = rlp
@@ -16406,7 +16406,7 @@ exports.rlp = rlp
  * @return {Buffer}
  */
 exports.zeros = function (bytes) {
-  var buf = new Buffer(bytes)
+  var buf = Buffer.from(bytes)
   buf.fill(0)
   return buf
 }
@@ -16449,17 +16449,17 @@ exports.toBuffer = function (v) {
   if (!Buffer.isBuffer(v)) {
     if (typeof v === 'string') {
       if (exports.isHexPrefixed(v)) {
-        v = new Buffer(padToEven(exports.stripHexPrefix(v)), 'hex')
+        v = Buffer.from(padToEven(exports.stripHexPrefix(v)), 'hex')
       } else {
-        v = new Buffer(v)
+        v = Buffer.from(v)
       }
     } else if (typeof v === 'number') {
       v = exports.intToBuffer(v)
     } else if (v === null || v === undefined) {
-      v = new Buffer([])
+      v = Buffer.from([])
     } else if (v.toArray) {
       // converts a BN to a Buffer
-      v = new Buffer(v.toArray())
+      v = Buffer.from(v.toArray())
     } else {
       throw new Error('invalid type')
     }
@@ -16492,7 +16492,7 @@ exports.intToHex = function (i) {
  */
 exports.intToBuffer = function (i) {
   var hex = exports.intToHex(i)
-  return new Buffer(hex, 'hex')
+  return Buffer.from(hex, 'hex')
 }
 
 /**
@@ -16532,10 +16532,10 @@ exports.fromSigned = function (num) {
  */
 exports.toUnsigned = function (num) {
   if (num.cmpn(0) === -1) {
-    return new Buffer(num.add(exports.TWO_POW256).toArray())
+    return Buffer.from(num.add(exports.TWO_POW256).toArray())
   }
 
-  return new Buffer(num.toArray())
+  return Buffer.from(num.toArray())
 }
 
 exports.sha3 = function (a, bytes) {
@@ -16546,7 +16546,7 @@ exports.sha3 = function (a, bytes) {
   if (a) {
     h.update(a)
   }
-  return new Buffer(h.digest('hex'), 'hex')
+  return Buffer.from(h.digest('hex'), 'hex')
 }
 
 /**
@@ -16559,7 +16559,7 @@ exports.pubToAddress = exports.publicToAddress = function (pubKey) {
   pubKey = exports.toBuffer(pubKey)
   var hash = new SHA3.SHA3Hash(256)
   hash.update(pubKey.slice(-64))
-  return new Buffer(hash.digest('hex').slice(-40), 'hex')
+  return Buffer.from(hash.digest('hex').slice(-40), 'hex')
 }
 
 /**
@@ -16572,7 +16572,7 @@ var privateToPublic = exports.privateToPublic = function (privateKey) {
   privateKey = exports.toBuffer(privateKey)
   privateKey = new BN(privateKey)
   var key = ec.keyFromPrivate(privateKey).getPublic().toJSON()
-  return new Buffer(key[0].toArray().concat(key[1].toArray()))
+  return Buffer.from(key[0].toArray().concat(key[1].toArray()))
 }
 
 /**
@@ -16593,13 +16593,13 @@ exports.privateToAddress = function (privateKey) {
  */
 exports.generateAddress = function (from, nonce) {
   from = exports.toBuffer(from)
-  nonce = new Buffer(new BN(nonce).toArray())
+  nonce = Buffer.from(new BN(nonce).toArray())
 
   if (nonce.toString('hex') === '00') {
     nonce = 0
   }
 
-  var hash = exports.sha3(rlp.encode([new Buffer(from, 'hex'), nonce]))
+  var hash = exports.sha3(rlp.encode([Buffer.from(from, 'hex'), nonce]))
   return hash.slice(12)
 }
 
@@ -16661,7 +16661,7 @@ exports.defineProperties = function (self, fields, data) {
         v = exports.toBuffer(v)
 
         if (v.toString('hex') === '00' && !field.allowZero) {
-          v = new Buffer([])
+          v = Buffer.from([])
         }
 
         if (field.allowLess && field.length) {
@@ -16682,7 +16682,7 @@ exports.defineProperties = function (self, fields, data) {
 
   if (data) {
     if (typeof data === 'string') {
-      data = new Buffer(exports.stripHexPrefix(data), 'hex')
+      data = Buffer.from(exports.stripHexPrefix(data), 'hex')
     }
 
     if (Buffer.isBuffer(data)) {
@@ -16696,7 +16696,7 @@ exports.defineProperties = function (self, fields, data) {
 
       // make sure all the items are buffers
       data.forEach(function (d, i) {
-        self[self._fields[i]] = typeof d === 'string' ? new Buffer(d, 'hex') : d
+        self[self._fields[i]] = typeof d === 'string' ? Buffer.from(d, 'hex') : d
       })
     } else if (typeof data === 'object') {
       for (var prop in data) {
@@ -16718,9 +16718,9 @@ exports.defineProperties = function (self, fields, data) {
 exports.printBA = function (ba) {
   if (Buffer.isBuffer(ba)) {
     if (ba.length === 0) {
-      console.log('new Buffer(0)')
+      console.log('Buffer.from(0)')
     } else {
-      console.log("new Buffer('" + ba.toString('hex') + "', 'hex')")
+      console.log("Buffer.from('" + ba.toString('hex') + "', 'hex')")
     }
   } else if (ba instanceof Array) {
     console.log('[')
@@ -16797,32 +16797,32 @@ var BlockHeader = module.exports = function (data) {
     default: utils.zeros(256)
   }, {
     name: 'difficulty',
-    default: new Buffer([])
+    default: Buffer.from([])
   }, {
     name: 'number',
-    default: new Buffer([])
+    default: Buffer.from([])
   }, {
     name: 'gasLimit',
-    default: new Buffer([])
+    default: Buffer.from([])
   }, {
     name: 'gasUsed',
     empty: true,
-    default: new Buffer([])
+    default: Buffer.from([])
   }, {
     name: 'timestamp',
-    default: new Buffer([])
+    default: Buffer.from([])
   }, {
     name: 'extraData',
     allowZero: true,
     empty: true,
-    default: new Buffer([])
+    default: Buffer.from([])
   }, {
     name: 'mixHash',
     default: utils.zeros(32)
   // length: 32
   }, {
     name: 'nonce',
-    default: new Buffer([]) // sha3(42)
+    default: Buffer.from([]) // sha3(42)
   }]
   utils.defineProperties(this, fields, data)
 }
@@ -17221,45 +17221,45 @@ var Transaction = module.exports = function (data) {
     name: 'nonce',
     length: 32,
     allowLess: true,
-    default: new Buffer([])
+    default: Buffer.from([])
   }, {
     name: 'gasPrice',
     length: 32,
     allowLess: true,
-    default: new Buffer([])
+    default: Buffer.from([])
   }, {
     name: 'gasLimit',
     length: 32,
     allowLess: true,
-    default: new Buffer([])
+    default: Buffer.from([])
   }, {
     name: 'to',
     empty: true,
     length: 20,
-    default: new Buffer([])
+    default: Buffer.from([])
   }, {
     name: 'value',
     length: 32,
     allowLess: true,
-    default: new Buffer([])
+    default: Buffer.from([])
   }, {
     name: 'data',
     allowZero: true,
-    default: new Buffer([])
+    default: Buffer.from([])
   }, {
     name: 'v',
     length: 1,
-    default: new Buffer([0x1c])
+    default: Buffer.from([0x1c])
   }, {
     name: 'r',
     length: 32,
     allowLess: true,
-    default: new Buffer([])
+    default: Buffer.from([])
   }, {
     name: 's',
     length: 32,
     allowLess: true,
-    default: new Buffer([])
+    default: Buffer.from([])
   }]
 
   Object.defineProperty(this, 'from', {
@@ -17455,7 +17455,7 @@ exports.rlp = rlp
  * @return {Buffer}
  */
 exports.zeros = function (bytes) {
-  var buf = new Buffer(bytes)
+  var buf = Buffer.from(bytes)
   buf.fill(0)
   return buf
 }
@@ -17496,14 +17496,14 @@ exports.unpad = exports.stripZeros = function (a) {
 exports.toBuffer = function (v) {
   if (!Buffer.isBuffer(v)) {
     if (typeof v === 'string') {
-      v = new Buffer(padToEven(exports.stripHexPrefix(v)), 'hex')
+      v = Buffer.from(padToEven(exports.stripHexPrefix(v)), 'hex')
     } else if (typeof v === 'number') {
       v = exports.intToBuffer(v)
     } else if (v === null || v === undefined) {
-      v = new Buffer([])
+      v = Buffer.from([])
     } else if (v.toArray) {
       // converts a BN to a Buffer
-      v = new Buffer(v.toArray())
+      v = Buffer.from(v.toArray())
     } else {
       throw new Error('invalid type')
     }
@@ -17536,7 +17536,7 @@ exports.intToHex = function (i) {
  */
 exports.intToBuffer = function (i) {
   var hex = exports.intToHex(i)
-  return new Buffer(hex, 'hex')
+  return Buffer.from(hex, 'hex')
 }
 
 /**
@@ -17576,10 +17576,10 @@ exports.fromSigned = function (num) {
  */
 exports.toUnsigned = function (num) {
   if (num.cmpn(0) === -1) {
-    return new Buffer(num.add(exports.TWO_POW256).toArray())
+    return Buffer.from(num.add(exports.TWO_POW256).toArray())
   }
 
-  return new Buffer(num.toArray())
+  return Buffer.from(num.toArray())
 }
 
 exports.sha3 = function (a, bytes) {
@@ -17590,7 +17590,7 @@ exports.sha3 = function (a, bytes) {
   if (a) {
     h.update(a)
   }
-  return new Buffer(h.digest('hex'), 'hex')
+  return Buffer.from(h.digest('hex'), 'hex')
 }
 
 /**
@@ -17603,7 +17603,7 @@ exports.pubToAddress = exports.publicToAddress = function (pubKey) {
   pubKey = exports.toBuffer(pubKey)
   var hash = new SHA3.SHA3Hash(256)
   hash.update(pubKey.slice(-64))
-  return new Buffer(hash.digest('hex').slice(-40), 'hex')
+  return Buffer.from(hash.digest('hex').slice(-40), 'hex')
 }
 
 /**
@@ -17616,7 +17616,7 @@ var privateToPublic = exports.privateToPublic = function (privateKey) {
   privateKey = exports.toBuffer(privateKey)
   privateKey = new BN(privateKey)
   var key = ec.keyFromPrivate(privateKey).getPublic().toJSON()
-  return new Buffer(key[0].toArray().concat(key[1].toArray()))
+  return Buffer.from(key[0].toArray().concat(key[1].toArray()))
 }
 
 /**
@@ -17637,13 +17637,13 @@ exports.privateToAddress = function (privateKey) {
  */
 exports.generateAddress = function (from, nonce) {
   from = exports.toBuffer(from)
-  nonce = new Buffer(new BN(nonce).toArray())
+  nonce = Buffer.from(new BN(nonce).toArray())
 
   if (nonce.toString('hex') === '00') {
     nonce = 0
   }
 
-  var hash = exports.sha3(rlp.encode([new Buffer(from, 'hex'), nonce]))
+  var hash = exports.sha3(rlp.encode([Buffer.from(from, 'hex'), nonce]))
   return hash.slice(12)
 }
 
@@ -17705,7 +17705,7 @@ exports.defineProperties = function (self, fields, data) {
         v = exports.toBuffer(v)
 
         if (v.toString('hex') === '00' && !field.allowZero) {
-          v = new Buffer([])
+          v = Buffer.from([])
         }
 
         if (field.allowLess && field.length) {
@@ -17726,7 +17726,7 @@ exports.defineProperties = function (self, fields, data) {
 
   if (data) {
     if (typeof data === 'string') {
-      data = new Buffer(exports.stripHexPrefix(data), 'hex')
+      data = Buffer.from(exports.stripHexPrefix(data), 'hex')
     }
 
     if (Buffer.isBuffer(data)) {
@@ -17740,7 +17740,7 @@ exports.defineProperties = function (self, fields, data) {
 
       // make sure all the items are buffers
       data.forEach(function (d, i) {
-        self[self._fields[i]] = typeof d === 'string' ? new Buffer(d, 'hex') : d
+        self[self._fields[i]] = typeof d === 'string' ? Buffer.from(d, 'hex') : d
       })
     } else if (typeof data === 'object') {
       for (var prop in data) {
@@ -17762,9 +17762,9 @@ exports.defineProperties = function (self, fields, data) {
 exports.printBA = function (ba) {
   if (Buffer.isBuffer(ba)) {
     if (ba.length === 0) {
-      console.log('new Buffer(0)')
+      console.log('Buffer.from(0)')
     } else {
-      console.log("new Buffer('" + ba.toString('hex') + "', 'hex')")
+      console.log("Buffer.from('" + ba.toString('hex') + "', 'hex')")
     }
   } else if (ba instanceof Array) {
     console.log('[')
@@ -17839,12 +17839,12 @@ function safeParseInt (v, base) {
 
 function encodeLength (len, offset) {
   if (len < 56) {
-    return new Buffer([len + offset])
+    return Buffer.from([len + offset])
   } else {
     var hexLength = intToHex(len)
     var lLength = hexLength.length / 2
     var firstByte = intToHex(offset + 55 + lLength)
-    return new Buffer(firstByte + hexLength, 'hex')
+    return Buffer.from(firstByte + hexLength, 'hex')
   }
 }
 
@@ -17855,7 +17855,7 @@ function encodeLength (len, offset) {
  **/
 exports.decode = function (input, stream) {
   if (!input || input.length === 0) {
-    return new Buffer([])
+    return Buffer.from([])
   }
 
   input = toBuffer(input)
@@ -17871,7 +17871,7 @@ exports.decode = function (input, stream) {
 
 exports.getLength = function (input) {
   if (!input || input.length === 0) {
-    return new Buffer([])
+    return Buffer.from([])
   }
 
   input = toBuffer(input)
@@ -17911,7 +17911,7 @@ function _decode (input) {
 
     // set 0x80 null to 0
     if (firstByte === 0x80) {
-      data = new Buffer([])
+      data = Buffer.from([])
     } else {
       data = input.slice(1, length)
     }
@@ -18004,24 +18004,24 @@ function padToEven (a) {
 
 function intToBuffer (i) {
   var hex = intToHex(i)
-  return new Buffer(hex, 'hex')
+  return Buffer.from(hex, 'hex')
 }
 
 function toBuffer (v) {
   if (!Buffer.isBuffer(v)) {
     if (typeof v === 'string') {
-      v = new Buffer(padToEven(stripHexPrefix(v)), 'hex')
+      v = Buffer.from(padToEven(stripHexPrefix(v)), 'hex')
     } else if (typeof v === 'number') {
       if (!v) {
-        v = new Buffer([])
+        v = Buffer.from([])
       } else {
         v = intToBuffer(v)
       }
     } else if (v === null || v === undefined) {
-      v = new Buffer([])
+      v = Buffer.from([])
     } else if (v.toArray) {
       // converts a BN to a Buffer
-      v = new Buffer(v.toArray())
+      v = Buffer.from(v.toArray())
     } else {
       throw new Error('invalid type')
     }
@@ -18043,13 +18043,13 @@ exports.MAX_INTEGER = new BN('ffffffffffffffffffffffffffffffffffffffffffffffffff
 exports.TWO_POW256 = new BN('115792089237316195423570985008687907853269984665640564039457584007913129639936')
 
 // hex string of SHA3-256 hash of `null`
-exports.SHA3_NULL = new Buffer('c5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470', 'hex')
+exports.SHA3_NULL = Buffer.from('c5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470', 'hex')
 
 // SHA3-256 hash of the rlp of []
-exports.SHA3_RLP_ARRAY = new Buffer('1dcc4de8dec75d7aab85b567b6ccd41ad312451b948a7413f0a142fd40d49347', 'hex')
+exports.SHA3_RLP_ARRAY = Buffer.from('1dcc4de8dec75d7aab85b567b6ccd41ad312451b948a7413f0a142fd40d49347', 'hex')
 
 // SHA3-256 hash of the rlp of `null`
-exports.SHA3_RLP = new Buffer('56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421', 'hex')
+exports.SHA3_RLP = Buffer.from('56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421', 'hex')
 
 exports.BN = BN
 exports.rlp = rlp
@@ -18061,7 +18061,7 @@ exports.rlp = rlp
  * @return {Buffer}
  */
 exports.zeros = function (bytes) {
-  var buf = new Buffer(bytes)
+  var buf = Buffer.from(bytes)
   buf.fill(0)
   return buf
 }
@@ -18104,17 +18104,17 @@ exports.toBuffer = function (v) {
   if (!Buffer.isBuffer(v)) {
     if (typeof v === 'string') {
       if (exports.isHexPrefixed(v)) {
-        v = new Buffer(padToEven(exports.stripHexPrefix(v)), 'hex')
+        v = Buffer.from(padToEven(exports.stripHexPrefix(v)), 'hex')
       } else {
-        v = new Buffer(v)
+        v = Buffer.from(v)
       }
     } else if (typeof v === 'number') {
       v = exports.intToBuffer(v)
     } else if (v === null || v === undefined) {
-      v = new Buffer([])
+      v = Buffer.from([])
     } else if (v.toArray) {
       // converts a BN to a Buffer
-      v = new Buffer(v.toArray())
+      v = Buffer.from(v.toArray())
     } else {
       throw new Error('invalid type')
     }
@@ -18147,7 +18147,7 @@ exports.intToHex = function (i) {
  */
 exports.intToBuffer = function (i) {
   var hex = exports.intToHex(i)
-  return new Buffer(hex, 'hex')
+  return Buffer.from(hex, 'hex')
 }
 
 /**
@@ -18187,10 +18187,10 @@ exports.fromSigned = function (num) {
  */
 exports.toUnsigned = function (num) {
   if (num.cmpn(0) === -1) {
-    return new Buffer(num.add(exports.TWO_POW256).toArray())
+    return Buffer.from(num.add(exports.TWO_POW256).toArray())
   }
 
-  return new Buffer(num.toArray())
+  return Buffer.from(num.toArray())
 }
 
 exports.sha3 = function (a, bytes) {
@@ -18201,7 +18201,7 @@ exports.sha3 = function (a, bytes) {
   if (a) {
     h.update(a)
   }
-  return new Buffer(h.digest('hex'), 'hex')
+  return Buffer.from(h.digest('hex'), 'hex')
 }
 
 /**
@@ -18214,7 +18214,7 @@ exports.pubToAddress = exports.publicToAddress = function (pubKey) {
   pubKey = exports.toBuffer(pubKey)
   var hash = new SHA3.SHA3Hash(256)
   hash.update(pubKey.slice(-64))
-  return new Buffer(hash.digest('hex').slice(-40), 'hex')
+  return Buffer.from(hash.digest('hex').slice(-40), 'hex')
 }
 
 /**
@@ -18227,7 +18227,7 @@ var privateToPublic = exports.privateToPublic = function (privateKey) {
   privateKey = exports.toBuffer(privateKey)
   privateKey = new BN(privateKey)
   var key = ec.keyFromPrivate(privateKey).getPublic().toJSON()
-  return new Buffer(key[0].toArray().concat(key[1].toArray()))
+  return Buffer.from(key[0].toArray().concat(key[1].toArray()))
 }
 
 /**
@@ -18248,13 +18248,13 @@ exports.privateToAddress = function (privateKey) {
  */
 exports.generateAddress = function (from, nonce) {
   from = exports.toBuffer(from)
-  nonce = new Buffer(new BN(nonce).toArray())
+  nonce = Buffer.from(new BN(nonce).toArray())
 
   if (nonce.toString('hex') === '00') {
     nonce = 0
   }
 
-  var hash = exports.sha3(rlp.encode([new Buffer(from, 'hex'), nonce]))
+  var hash = exports.sha3(rlp.encode([Buffer.from(from, 'hex'), nonce]))
   return hash.slice(12)
 }
 
@@ -18317,7 +18317,7 @@ exports.defineProperties = function (self, fields, data) {
         v = exports.toBuffer(v)
 
         if (v.toString('hex') === '00' && !field.allowZero) {
-          v = new Buffer([])
+          v = Buffer.from([])
         }
 
         if (field.allowLess && field.length) {
@@ -18338,7 +18338,7 @@ exports.defineProperties = function (self, fields, data) {
 
   if (data) {
     if (typeof data === 'string') {
-      data = new Buffer(exports.stripHexPrefix(data), 'hex')
+      data = Buffer.from(exports.stripHexPrefix(data), 'hex')
     }
 
     if (Buffer.isBuffer(data)) {
@@ -18352,7 +18352,7 @@ exports.defineProperties = function (self, fields, data) {
 
       // make sure all the items are buffers
       data.forEach(function (d, i) {
-        self[self._fields[i]] = typeof d === 'string' ? new Buffer(d, 'hex') : d
+        self[self._fields[i]] = typeof d === 'string' ? Buffer.from(d, 'hex') : d
       })
     } else if (typeof data === 'object') {
       for (var prop in data) {
@@ -18374,9 +18374,9 @@ exports.defineProperties = function (self, fields, data) {
 exports.printBA = function (ba) {
   if (Buffer.isBuffer(ba)) {
     if (ba.length === 0) {
-      console.log('new Buffer(0)')
+      console.log('Buffer.from(0)')
     } else {
-      console.log("new Buffer('" + ba.toString('hex') + "', 'hex')")
+      console.log("Buffer.from('" + ba.toString('hex') + "', 'hex')")
     }
   } else if (ba instanceof Array) {
     console.log('[')
@@ -21139,7 +21139,7 @@ exports.binary = {
   encode: function(data){
     return isBinary(data)
       ? data
-      : new Buffer(data);      
+      : Buffer.from(data);      
   },
   decode: identity,
   buffer: true,
@@ -21172,7 +21172,7 @@ bufferEncodings.forEach(function(type){
     encode: function(data){
       return isBinary(data)
         ? data
-        : new Buffer(data, type);
+        : Buffer.from(data, type);
     },
     decode: function(buffer){
       return buffer.toString(type);
@@ -21575,7 +21575,7 @@ Readable.prototype.push = function(chunk, encoding) {
   if (util.isString(chunk) && !state.objectMode) {
     encoding = encoding || state.defaultEncoding;
     if (encoding !== state.encoding) {
-      chunk = new Buffer(chunk, encoding);
+      chunk = Buffer.from(chunk, encoding);
       encoding = '';
     }
   }
@@ -22312,7 +22312,7 @@ function fromList(n, state) {
       if (stringMode)
         ret = '';
       else
-        ret = new Buffer(n);
+        ret = Buffer.from(n);
 
       var c = 0;
       for (var i = 0, l = list.length; i < l && c < n; i++) {
@@ -22826,7 +22826,7 @@ function decodeChunk(state, chunk, encoding) {
   if (!state.objectMode &&
       state.decodeStrings !== false &&
       util.isString(chunk)) {
-    chunk = new Buffer(chunk, encoding);
+    chunk = Buffer.from(chunk, encoding);
   }
   return chunk;
 }
@@ -23381,7 +23381,7 @@ Readable.prototype.push = function(chunk, encoding) {
   if (typeof chunk === 'string' && !state.objectMode) {
     encoding = encoding || state.defaultEncoding;
     if (encoding !== state.encoding) {
-      chunk = new Buffer(chunk, encoding);
+      chunk = Buffer.from(chunk, encoding);
       encoding = '';
     }
   }
@@ -24162,7 +24162,7 @@ function fromList(n, state) {
       if (stringMode)
         ret = '';
       else
-        ret = new Buffer(n);
+        ret = Buffer.from(n);
 
       var c = 0;
       for (var i = 0, l = list.length; i < l && c < n; i++) {
@@ -24638,7 +24638,7 @@ function decodeChunk(state, chunk, encoding) {
   if (!state.objectMode &&
       state.decodeStrings !== false &&
       typeof chunk === 'string') {
-    chunk = new Buffer(chunk, encoding);
+    chunk = Buffer.from(chunk, encoding);
   }
   return chunk;
 }
@@ -25791,10 +25791,10 @@ MemIterator.prototype._next = function (callback) {
     return setImmediate(callback)
 
   if (this.keyAsBuffer)
-    key = new Buffer(key)
+    key = Buffer.from(key)
 
   if (this.valueAsBuffer)
-    value = new Buffer(value)
+    value = Buffer.from(value)
 
   this._tree[this._incr]()
 
@@ -25849,7 +25849,7 @@ MemDOWN.prototype._get = function (key, options, callback) {
   }
 
   if (options.asBuffer !== false && !this._isBuffer(value))
-    value = new Buffer(String(value))
+    value = Buffer.from(String(value))
 
   setImmediate(function callNext () {
     callback(null, value)
@@ -27104,7 +27104,7 @@ function isTerminator (key) {
  * @param {Buffer| String} key
  */
 function stringToNibbles (key) {
-  var bkey = new Buffer(key)
+  var bkey = Buffer.from(key)
   var nibbles = []
 
   for (var i = 0; i < bkey.length; i++) {
@@ -27122,7 +27122,7 @@ function stringToNibbles (key) {
  * @param arr
  */
 function nibblesToBuffer (arr) {
-  var buf = new Buffer(arr.length / 2)
+  var buf = Buffer.from(arr.length / 2)
   for (var i = 0; i < buf.length; i++) {
     var q = i * 2
     buf[i] = (arr[q] << 4) + arr[++q]
@@ -27657,7 +27657,7 @@ Readable.prototype.push = function(chunk, encoding) {
   if (!state.objectMode && typeof chunk === 'string') {
     encoding = encoding || state.defaultEncoding;
     if (encoding !== state.encoding) {
-      chunk = new Buffer(chunk, encoding);
+      chunk = Buffer.from(chunk, encoding);
       encoding = '';
     }
   }
@@ -28401,7 +28401,7 @@ function fromList(n, state) {
       if (stringMode)
         ret = '';
       else
-        ret = new Buffer(n);
+        ret = Buffer.from(n);
 
       var c = 0;
       for (var i = 0, l = list.length; i < l && c < n; i++) {
@@ -28950,7 +28950,7 @@ function decodeChunk(state, chunk, encoding) {
   if (!state.objectMode &&
       state.decodeStrings !== false &&
       typeof chunk === 'string') {
-    chunk = new Buffer(chunk, encoding);
+    chunk = Buffer.from(chunk, encoding);
   }
   return chunk;
 }
@@ -29243,12 +29243,12 @@ function safeParseInt (v, base) {
 
 function encodeLength (len, offset) {
   if (len < 56) {
-    return new Buffer([len + offset])
+    return Buffer.from([len + offset])
   } else {
     var hexLength = intToHex(len)
     var lLength = hexLength.length / 2
     var firstByte = intToHex(offset + 55 + lLength)
-    return new Buffer(firstByte + hexLength, 'hex')
+    return Buffer.from(firstByte + hexLength, 'hex')
   }
 }
 
@@ -29259,7 +29259,7 @@ function encodeLength (len, offset) {
  **/
 exports.decode = function (input, stream) {
   if (!input || input.length === 0) {
-    return new Buffer([])
+    return Buffer.from([])
   }
 
   input = toBuffer(input)
@@ -29275,7 +29275,7 @@ exports.decode = function (input, stream) {
 
 exports.getLength = function (input) {
   if (!input || input.length === 0) {
-    return new Buffer([])
+    return Buffer.from([])
   }
 
   input = toBuffer(input)
@@ -29315,7 +29315,7 @@ function _decode (input) {
 
     // set 0x80 null to 0
     if (firstByte === 0x80) {
-      data = new Buffer([])
+      data = Buffer.from([])
     } else {
       data = input.slice(1, length)
     }
@@ -29408,28 +29408,28 @@ function padToEven (a) {
 
 function intToBuffer (i) {
   var hex = intToHex(i)
-  return new Buffer(hex, 'hex')
+  return Buffer.from(hex, 'hex')
 }
 
 function toBuffer (v) {
   if (!Buffer.isBuffer(v)) {
     if (typeof v === 'string') {
       if (isHexPrefixed(v)) {
-        v = new Buffer(padToEven(stripHexPrefix(v)), 'hex')
+        v = Buffer.from(padToEven(stripHexPrefix(v)), 'hex')
       } else {
-        v = new Buffer(v)
+        v = Buffer.from(v)
       }
     } else if (typeof v === 'number') {
       if (!v) {
-        v = new Buffer([])
+        v = Buffer.from([])
       } else {
         v = intToBuffer(v)
       }
     } else if (v === null || v === undefined) {
-      v = new Buffer([])
+      v = Buffer.from([])
     } else if (v.toArray) {
       // converts a BN to a Buffer
-      v = new Buffer(v.toArray())
+      v = Buffer.from(v.toArray())
     } else {
       throw new Error('invalid type')
     }
@@ -29447,7 +29447,7 @@ const BN = require('bn.js')
 function pad32(msg) {
   var buf
   if (msg.length < 32) {
-    buf = new Buffer(32)
+    buf = Buffer.from(32)
     buf.fill(0)
     msg.copy(buf, 32 - msg.length)
     return buf
@@ -29490,10 +29490,10 @@ exports.sign = function (msg, secretKey, DER, cb) {
   var result = ec.sign(new BN(msg), new BN(secretKey))
 
   if (DER)
-    result = new Buffer(result.toDER())
+    result = Buffer.from(result.toDER())
   else {
     result = {
-      signature: new Buffer(result.r.toArray().concat(result.s.toArray())),
+      signature: Buffer.from(result.r.toArray().concat(result.s.toArray())),
       recovery: result.recoveryParam
     }
   }
@@ -29561,7 +29561,7 @@ exports.recover = function (msg, sig, compressed, cb) {
   else
     r = r.encode()
 
-  r = new Buffer(r)
+  r = Buffer.from(r)
 
   if (cb)
     cb(null, r)
@@ -29588,9 +29588,9 @@ exports.createPublicKey = function (secKey, compressed) {
   }
 
   if (compressed)
-    return new Buffer(pub.encodeCompressed())
+    return Buffer.from(pub.encodeCompressed())
   else
-    return new Buffer(pub.encode())
+    return Buffer.from(pub.encode())
 }
 
 }).call(this,require("buffer").Buffer)
@@ -29737,7 +29737,7 @@ var StringDecoder = exports.StringDecoder = function(encoding) {
 
   // Enough space to store all bytes of a single character. UTF-8 needs 4
   // bytes, but CESU-8 may require up to 6 (3 bytes per surrogate).
-  this.charBuffer = new Buffer(6);
+  this.charBuffer = Buffer.from(6);
   // Number of bytes received for the current incomplete multi-byte character.
   this.charReceived = 0;
   // Number of bytes expected for the current incomplete multi-byte character.
@@ -29751,7 +29751,7 @@ var StringDecoder = exports.StringDecoder = function(encoding) {
 // returned when calling write again with the remaining bytes.
 //
 // Note: Converting a Buffer containing an orphan surrogate to a String
-// currently works, but converting a String to a Buffer (via `new Buffer`, or
+// currently works, but converting a String to a Buffer (via `Buffer.from`, or
 // Buffer#write) will replace incomplete surrogates with the unicode
 // replacement character. See https://codereview.chromium.org/121173009/ .
 StringDecoder.prototype.write = function(buffer) {
@@ -30435,8 +30435,8 @@ function kMaxLength () {
 function Buffer (arg) {
   if (!(this instanceof Buffer)) {
     // Avoid going through an ArgumentsAdaptorTrampoline in the common case.
-    if (arguments.length > 1) return new Buffer(arg, arguments[1])
-    return new Buffer(arg)
+    if (arguments.length > 1) return Buffer.from(arg, arguments[1])
+    return Buffer.from(arg)
   }
 
   this.length = 0
@@ -30580,7 +30580,7 @@ function checked (length) {
 function SlowBuffer (subject, encoding) {
   if (!(this instanceof SlowBuffer)) return new SlowBuffer(subject, encoding)
 
-  var buf = new Buffer(subject, encoding)
+  var buf = Buffer.from(subject, encoding)
   delete buf.parent
   return buf
 }
@@ -30640,7 +30640,7 @@ Buffer.concat = function concat (list, length) {
   if (!isArray(list)) throw new TypeError('list argument must be an Array of Buffers.')
 
   if (list.length === 0) {
-    return new Buffer(0)
+    return Buffer.from(0)
   } else if (list.length === 1) {
     return list[0]
   }
@@ -30653,7 +30653,7 @@ Buffer.concat = function concat (list, length) {
     }
   }
 
-  var buf = new Buffer(length)
+  var buf = Buffer.from(length)
   var pos = 0
   for (i = 0; i < list.length; i++) {
     var item = list[i]
@@ -31048,7 +31048,7 @@ Buffer.prototype.slice = function slice (start, end) {
     newBuf = Buffer._augment(this.subarray(start, end))
   } else {
     var sliceLen = end - start
-    newBuf = new Buffer(sliceLen, undefined)
+    newBuf = Buffer.from(sliceLen, undefined)
     for (var i = 0; i < sliceLen; i++) {
       newBuf[i] = this[i + start]
     }
@@ -31562,7 +31562,7 @@ Buffer.prototype.fill = function fill (value, start, end) {
 Buffer.prototype.toArrayBuffer = function toArrayBuffer () {
   if (typeof Uint8Array !== 'undefined') {
     if (Buffer.TYPED_ARRAY_SUPPORT) {
-      return (new Buffer(this)).buffer
+      return (Buffer.from(this)).buffer
     } else {
       var buf = new Uint8Array(this.length)
       for (var i = 0, len = buf.length; i < len; i += 1) {
@@ -32130,14 +32130,14 @@ var md5 = require('create-hash/md5')
 module.exports = EVP_BytesToKey
 function EVP_BytesToKey (password, keyLen, ivLen) {
   if (!Buffer.isBuffer(password)) {
-    password = new Buffer(password, 'binary')
+    password = Buffer.from(password, 'binary')
   }
   keyLen = keyLen / 8
   ivLen = ivLen || 0
   var ki = 0
   var ii = 0
-  var key = new Buffer(keyLen)
-  var iv = new Buffer(ivLen)
+  var key = Buffer.from(keyLen)
+  var iv = Buffer.from(ivLen)
   var addmd = 0
   var md_buf
   var i
@@ -32308,9 +32308,9 @@ AES.prototype._doReset = function () {
 }
 
 AES.prototype.encryptBlock = function (M) {
-  M = bufferToArray(new Buffer(M))
+  M = bufferToArray(Buffer.from(M))
   var out = this._doCryptBlock(M, this._keySchedule, G.SUB_MIX, G.SBOX)
-  var buf = new Buffer(16)
+  var buf = Buffer.from(16)
   buf.writeUInt32BE(out[0], 0)
   buf.writeUInt32BE(out[1], 4)
   buf.writeUInt32BE(out[2], 8)
@@ -32319,12 +32319,12 @@ AES.prototype.encryptBlock = function (M) {
 }
 
 AES.prototype.decryptBlock = function (M) {
-  M = bufferToArray(new Buffer(M))
+  M = bufferToArray(Buffer.from(M))
   var temp = [M[3], M[1]]
   M[1] = temp[0]
   M[3] = temp[1]
   var out = this._doCryptBlock(M, this._invKeySchedule, G.INV_SUB_MIX, G.INV_SBOX)
-  var buf = new Buffer(16)
+  var buf = Buffer.from(16)
   buf.writeUInt32BE(out[0], 0)
   buf.writeUInt32BE(out[3], 4)
   buf.writeUInt32BE(out[2], 8)
@@ -32386,18 +32386,18 @@ function StreamCipher (mode, key, iv, decrypt) {
     return new StreamCipher(mode, key, iv)
   }
   Transform.call(this)
-  this._finID = Buffer.concat([iv, new Buffer([0, 0, 0, 1])])
-  iv = Buffer.concat([iv, new Buffer([0, 0, 0, 2])])
+  this._finID = Buffer.concat([iv, Buffer.from([0, 0, 0, 1])])
+  iv = Buffer.concat([iv, Buffer.from([0, 0, 0, 2])])
   this._cipher = new aes.AES(key)
-  this._prev = new Buffer(iv.length)
-  this._cache = new Buffer('')
-  this._secCache = new Buffer('')
+  this._prev = Buffer.from(iv.length)
+  this._cache = Buffer.from('')
+  this._secCache = Buffer.from('')
   this._decrypt = decrypt
   this._alen = 0
   this._len = 0
   iv.copy(this._prev)
   this._mode = mode
-  var h = new Buffer(4)
+  var h = Buffer.from(4)
   h.fill(0)
   this._ghash = new GHASH(this._cipher.encryptBlock(h))
   this._authTag = null
@@ -32407,7 +32407,7 @@ StreamCipher.prototype._update = function (chunk) {
   if (!this._called && this._alen) {
     var rump = 16 - (this._alen % 16)
     if (rump < 16) {
-      rump = new Buffer(rump)
+      rump = Buffer.from(rump)
       rump.fill(0)
       this._ghash.update(rump)
     }
@@ -32494,11 +32494,11 @@ module.exports = CipherBase
 inherits(CipherBase, Transform)
 function CipherBase () {
   Transform.call(this)
-  this._base64Cache = new Buffer('')
+  this._base64Cache = Buffer.from('')
 }
 CipherBase.prototype.update = function (data, inputEnc, outputEnc) {
   if (typeof data === 'string') {
-    data = new Buffer(data, inputEnc)
+    data = Buffer.from(data, inputEnc)
   }
   var outData = this._update(data)
   if (outputEnc) {
@@ -32519,7 +32519,7 @@ CipherBase.prototype._flush = function (next) {
   next()
 }
 CipherBase.prototype.final = function (outputEnc) {
-  var outData = this._final() || new Buffer('')
+  var outData = this._final() || Buffer.from('')
   if (outputEnc) {
     outData = this._toString(outData, outputEnc, true)
   }
@@ -32541,7 +32541,7 @@ CipherBase.prototype._toString = function (value, enc, final) {
   var overhang = len % 3
   if (!overhang) {
     out = this._base64Cache
-    this._base64Cache = new Buffer('')
+    this._base64Cache = Buffer.from('')
     return out.toString('base64')
   }
   var newLen = len - overhang
@@ -32574,7 +32574,7 @@ function Decipher (mode, key, iv) {
   this._cache = new Splitter()
   this._last = void 0
   this._cipher = new aes.AES(key)
-  this._prev = new Buffer(iv.length)
+  this._prev = Buffer.from(iv.length)
   iv.copy(this._prev)
   this._mode = mode
   this._autopadding = true
@@ -32605,7 +32605,7 @@ function Splitter () {
   if (!(this instanceof Splitter)) {
     return new Splitter()
   }
-  this.cache = new Buffer('')
+  this.cache = Buffer.from('')
 }
 Splitter.prototype.add = function (data) {
   this.cache = Buffer.concat([this.cache, data])
@@ -32664,10 +32664,10 @@ function createDecipheriv (suite, password, iv) {
     throw new TypeError('invalid suite type')
   }
   if (typeof iv === 'string') {
-    iv = new Buffer(iv)
+    iv = Buffer.from(iv)
   }
   if (typeof password === 'string') {
-    password = new Buffer(password)
+    password = Buffer.from(password)
   }
   if (password.length !== config.key / 8) {
     throw new TypeError('invalid key length ' + password.length)
@@ -32712,7 +32712,7 @@ function Cipher (mode, key, iv) {
   Transform.call(this)
   this._cache = new Splitter()
   this._cipher = new aes.AES(key)
-  this._prev = new Buffer(iv.length)
+  this._prev = Buffer.from(iv.length)
   iv.copy(this._prev)
   this._mode = mode
   this._autopadding = true
@@ -32747,7 +32747,7 @@ function Splitter () {
   if (!(this instanceof Splitter)) {
     return new Splitter()
   }
-  this.cache = new Buffer('')
+  this.cache = Buffer.from('')
 }
 Splitter.prototype.add = function (data) {
   this.cache = Buffer.concat([this.cache, data])
@@ -32763,7 +32763,7 @@ Splitter.prototype.get = function () {
 }
 Splitter.prototype.flush = function () {
   var len = 16 - this.cache.length
-  var padBuff = new Buffer(len)
+  var padBuff = Buffer.from(len)
 
   var i = -1
   while (++i < len) {
@@ -32789,10 +32789,10 @@ function createCipheriv (suite, password, iv) {
     throw new TypeError('invalid suite type')
   }
   if (typeof iv === 'string') {
-    iv = new Buffer(iv)
+    iv = Buffer.from(iv)
   }
   if (typeof password === 'string') {
-    password = new Buffer(password)
+    password = Buffer.from(password)
   }
   if (password.length !== config.key / 8) {
     throw new TypeError('invalid key length ' + password.length)
@@ -32822,14 +32822,14 @@ exports.createCipher = createCipher
 }).call(this,require("buffer").Buffer)
 },{"./EVP_BytesToKey":135,"./aes":136,"./authCipher":137,"./cipherBase":139,"./modes":143,"./modes/cbc":144,"./modes/cfb":145,"./modes/cfb1":146,"./modes/cfb8":147,"./modes/ctr":148,"./modes/ecb":149,"./modes/ofb":150,"./streamCipher":152,"buffer":130,"inherits":276}],142:[function(require,module,exports){
 (function (Buffer){
-var zeros = new Buffer(16)
+var zeros = Buffer.from(16)
 zeros.fill(0)
 module.exports = GHASH
 function GHASH (key) {
   this.h = key
-  this.state = new Buffer(16)
+  this.state = Buffer.from(16)
   this.state.fill(0)
-  this.cache = new Buffer('')
+  this.cache = Buffer.from('')
 }
 // from http://bitwiseshiftleft.github.io/sjcl/doc/symbols/src/core_gcm.js.html
 // by Juho Vähä-Herttua
@@ -32899,7 +32899,7 @@ function toArray (buf) {
 }
 function fromArray (out) {
   out = out.map(fixup_uint32)
-  var buf = new Buffer(16)
+  var buf = Buffer.from(16)
   buf.writeUInt32BE(out[0], 0)
   buf.writeUInt32BE(out[1], 4)
   buf.writeUInt32BE(out[2], 8)
@@ -33119,13 +33119,13 @@ exports.decrypt = function (self, block) {
 var xor = require('buffer-xor')
 
 exports.encrypt = function (self, data, decrypt) {
-  var out = new Buffer('')
+  var out = Buffer.from('')
   var len
 
   while (data.length) {
     if (self._cache.length === 0) {
       self._cache = self._cipher.encryptBlock(self._prev)
-      self._prev = new Buffer('')
+      self._prev = Buffer.from('')
     }
 
     if (self._cache.length <= data.length) {
@@ -33168,7 +33168,7 @@ function encryptByte (self, byteParam, decrypt) {
 }
 exports.encrypt = function (self, chunk, decrypt) {
   var len = chunk.length
-  var out = new Buffer(len)
+  var out = Buffer.from(len)
   var i = -1
   while (++i < len) {
     out[i] = encryptByte(self, chunk[i], decrypt)
@@ -33178,8 +33178,8 @@ exports.encrypt = function (self, chunk, decrypt) {
 function shiftIn (buffer, value) {
   var len = buffer.length
   var i = -1
-  var out = new Buffer(buffer.length)
-  buffer = Buffer.concat([buffer, new Buffer([value])])
+  var out = Buffer.from(buffer.length)
+  buffer = Buffer.concat([buffer, Buffer.from([value])])
   while (++i < len) {
     out[i] = buffer[i] << 1 | buffer[i + 1] >> (7)
   }
@@ -33192,12 +33192,12 @@ function shiftIn (buffer, value) {
 function encryptByte (self, byteParam, decrypt) {
   var pad = self._cipher.encryptBlock(self._prev)
   var out = pad[0] ^ byteParam
-  self._prev = Buffer.concat([self._prev.slice(1), new Buffer([decrypt ? byteParam : out])])
+  self._prev = Buffer.concat([self._prev.slice(1), Buffer.from([decrypt ? byteParam : out])])
   return out
 }
 exports.encrypt = function (self, chunk, decrypt) {
   var len = chunk.length
-  var out = new Buffer(len)
+  var out = Buffer.from(len)
   var i = -1
   while (++i < len) {
     out[i] = encryptByte(self, chunk[i], decrypt)
@@ -33273,7 +33273,7 @@ exports.encrypt = function (self, chunk) {
 (function (Buffer){
 module.exports = function xor (a, b) {
   var length = Math.min(a.length, b.length)
-  var buffer = new Buffer(length)
+  var buffer = Buffer.from(length)
 
   for (var i = 0; i < length; ++i) {
     buffer[i] = a[i] ^ b[i]
@@ -33297,9 +33297,9 @@ function StreamCipher (mode, key, iv, decrypt) {
   }
   Transform.call(this)
   this._cipher = new aes.AES(key)
-  this._prev = new Buffer(iv.length)
-  this._cache = new Buffer('')
-  this._secCache = new Buffer('')
+  this._prev = Buffer.from(iv.length)
+  this._cache = Buffer.from('')
+  this._secCache = Buffer.from('')
   this._decrypt = decrypt
   iv.copy(this._prev)
   this._mode = mode
@@ -33318,72 +33318,72 @@ StreamCipher.prototype._final = function () {
 exports['RSA-SHA224'] = exports.sha224WithRSAEncryption = {
   sign: 'rsa',
   hash: 'sha224',
-  id: new Buffer('302d300d06096086480165030402040500041c', 'hex')
+  id: Buffer.from('302d300d06096086480165030402040500041c', 'hex')
 }
 exports['RSA-SHA256'] = exports.sha256WithRSAEncryption = {
   sign: 'rsa',
   hash: 'sha256',
-  id: new Buffer('3031300d060960864801650304020105000420', 'hex')
+  id: Buffer.from('3031300d060960864801650304020105000420', 'hex')
 }
 exports['RSA-SHA384'] = exports.sha384WithRSAEncryption = {
   sign: 'rsa',
   hash: 'sha384',
-  id: new Buffer('3041300d060960864801650304020205000430', 'hex')
+  id: Buffer.from('3041300d060960864801650304020205000430', 'hex')
 }
 exports['RSA-SHA512'] = exports.sha512WithRSAEncryption = {
   sign: 'rsa',
   hash: 'sha512',
-  id: new Buffer('3051300d060960864801650304020305000440', 'hex')
+  id: Buffer.from('3051300d060960864801650304020305000440', 'hex')
 }
 exports['RSA-SHA1'] = {
 	sign: 'rsa',
 	hash: 'sha1',
-	id: new Buffer('3021300906052b0e03021a05000414', 'hex')
+	id: Buffer.from('3021300906052b0e03021a05000414', 'hex')
 }
 exports['ecdsa-with-SHA1'] = {
 	sign: 'ecdsa',
 	hash: 'sha1',
-	id: new Buffer('', 'hex')
+	id: Buffer.from('', 'hex')
 }
 exports.DSA = exports['DSA-SHA1'] = exports['DSA-SHA'] = {
   sign: 'dsa',
   hash: 'sha1',
-  id: new Buffer('', 'hex')
+  id: Buffer.from('', 'hex')
 }
 exports['DSA-SHA224'] = exports['DSA-WITH-SHA224'] = {
   sign: 'dsa',
   hash: 'sha224',
-  id: new Buffer('', 'hex')
+  id: Buffer.from('', 'hex')
 }
 exports['DSA-SHA256'] = exports['DSA-WITH-SHA256'] = {
   sign: 'dsa',
   hash: 'sha256',
-  id: new Buffer('', 'hex')
+  id: Buffer.from('', 'hex')
 }
 exports['DSA-SHA384'] = exports['DSA-WITH-SHA384'] = {
   sign: 'dsa',
   hash: 'sha384',
-  id: new Buffer('', 'hex')
+  id: Buffer.from('', 'hex')
 }
 exports['DSA-SHA512'] = exports['DSA-WITH-SHA512'] = {
   sign: 'dsa',
   hash: 'sha512',
-  id: new Buffer('', 'hex')
+  id: Buffer.from('', 'hex')
 }
 exports['DSA-RIPEMD160'] = {
   sign: 'dsa',
   hash: 'rmd160',
-  id: new Buffer('', 'hex')
+  id: Buffer.from('', 'hex')
 }
 exports['RSA-RIPEMD160'] = exports.ripemd160WithRSA = {
   sign: 'rsa',
   hash: 'rmd160',
-  id: new Buffer('3021300906052b2403020105000414', 'hex')
+  id: Buffer.from('3021300906052b2403020105000414', 'hex')
 }
 exports['RSA-MD5'] = exports.md5WithRSAEncryption = {
   sign: 'rsa',
   hash: 'md5',
-  id: new Buffer('3020300c06082a864886f70d020505000410', 'hex')
+  id: Buffer.from('3020300c06082a864886f70d020505000410', 'hex')
 }
 
 }).call(this,require("buffer").Buffer)
@@ -33434,7 +33434,7 @@ Sign.prototype._write = function _write (data, _, done) {
 
 Sign.prototype.update = function update (data, enc) {
   if (typeof data === 'string')
-    data = new Buffer(data, enc)
+    data = Buffer.from(data, enc)
   this._hash.update(data)
   return this
 }
@@ -33468,7 +33468,7 @@ Verify.prototype._write = function _write (data, _, done) {
 
 Verify.prototype.update = function update (data, enc) {
   if (typeof data === 'string')
-    data = new Buffer(data, enc)
+    data = Buffer.from(data, enc)
 
   this._hash.update(data)
   return this
@@ -33478,7 +33478,7 @@ Verify.prototype.verify = function verifyMethod (key, sig, enc) {
   this.end()
   var hash = this._hash.digest()
   if (typeof sig === 'string')
-    sig = new Buffer(sig, enc)
+    sig = Buffer.from(sig, enc)
 
   return verify(sig, Buffer.concat([this._tag, hash]), key, this._signType)
 }
@@ -35845,9 +35845,9 @@ function crt(msg, priv) {
   var h = m1.isub(m2).imul(qinv).mod(p);
   h.imul(q);
   m2.iadd(h);
-  var out = new Buffer(m2.imul(blinds.unblinder).mod(priv.modulus).toArray());
+  var out = Buffer.from(m2.imul(blinds.unblinder).mod(priv.modulus).toArray());
   if (out.length < len) {
-    var prefix = new Buffer(len - out.length);
+    var prefix = Buffer.from(len - out.length);
     prefix.fill(0);
     out = Buffer.concat([prefix, out], len);
   }
@@ -38252,7 +38252,7 @@ module.exports = function evp(password, salt, keyLen) {
   keyLen = keyLen/8;
   var ki = 0;
   var ii = 0;
-  var key = new Buffer(keyLen);
+  var key = Buffer.from(keyLen);
   var addmd = 0;
   var md, md_buf;
   var i;
@@ -38434,11 +38434,11 @@ module.exports = function (okey, password) {
   var decrypted;
   if (!match) {
     var match2 = key.match(fullRegex);
-    decrypted = new Buffer(match2[2].replace(/\r?\n/g, ''), 'base64');
+    decrypted = Buffer.from(match2[2].replace(/\r?\n/g, ''), 'base64');
   } else {
     var suite = 'aes' + match[1];
-    var iv = new Buffer(match[2], 'hex');
-    var cipherText = new Buffer(match[3].replace(/\r?\n/g, ''), 'base64');
+    var iv = Buffer.from(match[2], 'hex');
+    var cipherText = Buffer.from(match[3].replace(/\r?\n/g, ''), 'base64');
     var cipherKey = evp(password, iv.slice(0,8), parseInt(match[1]));
     var out = [];
     var cipher = ciphers.createDecipheriv(suite, cipherKey, iv);
@@ -38480,7 +38480,7 @@ function parseKeys(buffer) {
     buffer = buffer.key;
   }
   if (typeof buffer === 'string') {
-    buffer = new Buffer(buffer);
+    buffer = Buffer.from(buffer);
   }
 
   var stripped = fixProc(buffer, password);
@@ -38734,7 +38734,7 @@ exports.EncoderBuffer = EncoderBuffer;
 
 EncoderBuffer.prototype.join = function join(out, offset) {
   if (!out)
-    out = new Buffer(this.length);
+    out = Buffer.from(this.length);
   if (!offset)
     offset = 0;
 
@@ -39877,7 +39877,7 @@ PEMDecoder.prototype.decode = function decode(data, options) {
   // Remove excessive symbols
   base64.replace(/[^a-z0-9\+\/=]+/gi, '');
 
-  var input = new Buffer(base64, 'base64');
+  var input = Buffer.from(base64, 'base64');
   return DERDecoder.prototype.decode.call(this, input, options);
 };
 
@@ -39922,7 +39922,7 @@ DERNode.prototype._encodeComposite = function encodeComposite(tag,
 
   // Short form
   if (content.length < 0x80) {
-    var header = new Buffer(2);
+    var header = Buffer.from(2);
     header[0] = encodedTag;
     header[1] = content.length;
     return this._createEncoderBuffer([ header, content ]);
@@ -39934,7 +39934,7 @@ DERNode.prototype._encodeComposite = function encodeComposite(tag,
   for (var i = content.length; i >= 0x100; i >>= 8)
     lenOctets++;
 
-  var header = new Buffer(1 + 1 + lenOctets);
+  var header = Buffer.from(1 + 1 + lenOctets);
   header[0] = encodedTag;
   header[1] = 0x80 | lenOctets;
 
@@ -39987,7 +39987,7 @@ DERNode.prototype._encodeObjid = function encodeObjid(id, values, relative) {
       size++;
   }
 
-  var objid = new Buffer(size);
+  var objid = Buffer.from(size);
   var offset = objid.length - 1;
   for (var i = id.length - 1; i >= 0; i--) {
     var ident = id[i];
@@ -40058,7 +40058,7 @@ DERNode.prototype._encodeInt = function encodeInt(num, values) {
     if (num.sign === false && numArray[0] & 0x80) {
       numArray.unshift(0);
     }
-    num = new Buffer(numArray);
+    num = Buffer.from(numArray);
   }
 
   if (Buffer.isBuffer(num)) {
@@ -40066,7 +40066,7 @@ DERNode.prototype._encodeInt = function encodeInt(num, values) {
     if (num.length === 0)
       size++;
 
-    var out = new Buffer(size);
+    var out = Buffer.from(size);
     num.copy(out);
     if (num.length === 0)
       out[0] = 0
@@ -40092,7 +40092,7 @@ DERNode.prototype._encodeInt = function encodeInt(num, values) {
     out.unshift(0);
   }
 
-  return this._createEncoderBuffer(new Buffer(out));
+  return this._createEncoderBuffer(Buffer.from(out));
 };
 
 DERNode.prototype._encodeBool = function encodeBool(value) {
@@ -40249,7 +40249,7 @@ function ecSign (hash, priv) {
   var key = curve.genKeyPair()
   key._importPrivate(priv.privateKey)
   var out = key.sign(hash)
-  return new Buffer(out.toDER())
+  return Buffer.from(out.toDER())
 }
 function dsaSign (hash, priv, algo) {
   var x = priv.params.priv_key
@@ -40287,25 +40287,25 @@ function toDER (r, s) {
   var total = r.length + s.length + 4
   var res = [ 0x30, total, 0x02, r.length ]
   res = res.concat(r, [ 0x02, s.length ], s)
-  return new Buffer(res)
+  return Buffer.from(res)
 }
 module.exports.getKey = getKey
 function getKey (x, q, hash, algo) {
-  x = new Buffer(x.toArray())
+  x = Buffer.from(x.toArray())
   if (x.length < q.byteLength()) {
-    var zeros = new Buffer(q.byteLength() - x.length)
+    var zeros = Buffer.from(q.byteLength() - x.length)
     zeros.fill(0)
     x = Buffer.concat([zeros, x])
   }
   var hlen = hash.length
   var hbits = bits2octets(hash, q)
-  var v = new Buffer(hlen)
+  var v = Buffer.from(hlen)
   v.fill(1)
-  var k = new Buffer(hlen)
+  var k = Buffer.from(hlen)
   k.fill(0)
   k = createHmac(algo, k)
     .update(v)
-    .update(new Buffer([0]))
+    .update(Buffer.from([0]))
     .update(x)
     .update(hbits)
     .digest()
@@ -40314,7 +40314,7 @@ function getKey (x, q, hash, algo) {
     .digest()
   k = createHmac(algo, k)
     .update(v)
-    .update(new Buffer([1]))
+    .update(Buffer.from([1]))
     .update(x)
     .update(hbits)
     .digest()
@@ -40337,9 +40337,9 @@ function bits2int (obits, q) {
 function bits2octets (bits, q) {
   bits = bits2int(bits, q)
   bits = bits.mod(q)
-  var out = new Buffer(bits.toArray())
+  var out = Buffer.from(bits.toArray())
   if (out.length < q.byteLength()) {
-    var zeros = new Buffer(q.byteLength() - out.length)
+    var zeros = Buffer.from(q.byteLength() - out.length)
     zeros.fill(0)
     out = Buffer.concat([zeros, out])
   }
@@ -40350,7 +40350,7 @@ function makeKey (q, kv, algo) {
   var t
   var k
   while (true) {
-    t = new Buffer('')
+    t = Buffer.from('')
     while (t.length * 8 < q.bitLength()) {
       kv.v = createHmac(algo, kv.k)
         .update(kv.v)
@@ -40360,7 +40360,7 @@ function makeKey (q, kv, algo) {
     k = bits2int(t, q)
     kv.k =  createHmac(algo, kv.k)
         .update(kv.v)
-        .update(new Buffer([0]))
+        .update(Buffer.from([0]))
         .digest()
     kv.v = createHmac(algo, kv.k)
         .update(kv.v)
@@ -40414,13 +40414,13 @@ function verify (sig, hash, key, signType) {
   while (++i < hash.length) {
     pad.push(hash[i])
   }
-  pad = new Buffer(pad)
+  pad = Buffer.from(pad)
   var red = BN.mont(pub.modulus)
   sig = new BN(sig).toRed(red)
 
   sig = sig.redPow(new BN(pub.publicExponent))
 
-  sig = new Buffer(sig.fromRed().toArray())
+  sig = Buffer.from(sig.fromRed().toArray())
   var out = 0
   if (padNum < 8) {
     out = 1
@@ -40534,7 +40534,7 @@ ECDH.prototype.generateKeys = function (enc, format) {
 ECDH.prototype.computeSecret = function (other, inenc, enc) {
 	inenc = inenc || 'utf8';
 	if (!Buffer.isBuffer(other)) {
-		other = new Buffer(other, inenc);
+		other = Buffer.from(other, inenc);
 	}
 	var otherPub = this.curve.keyFromPublic(other).getPublic();
 	var out = otherPub.mul(this.keys.getPrivate()).getX();
@@ -40560,7 +40560,7 @@ ECDH.prototype.getPrivateKey = function (enc) {
 ECDH.prototype.setPublicKey = function (pub, enc) {
 	enc = enc || 'utf8';
 	if (!Buffer.isBuffer(pub)) {
-		pub = new Buffer(pub, enc);
+		pub = Buffer.from(pub, enc);
 	}
 	this.keys._importPublic(pub);
 	return this;
@@ -40569,7 +40569,7 @@ ECDH.prototype.setPublicKey = function (pub, enc) {
 ECDH.prototype.setPrivateKey = function (priv, enc) {
 	enc = enc || 'utf8';
 	if (!Buffer.isBuffer(priv)) {
-		priv = new Buffer(priv, enc);
+		priv = Buffer.from(priv, enc);
 	}
 	var _priv = new BN(priv);
 	_priv = _priv.toString(16);
@@ -40581,9 +40581,9 @@ function formatReturnValue(bn, enc, len) {
 	if (!Array.isArray(bn)) {
 		bn = bn.toArray();
 	}
-	var buf = new Buffer(bn);
+	var buf = Buffer.from(bn);
 	if (len && buf.length < len) {
-		var zeros = new Buffer(len - buf.length);
+		var zeros = Buffer.from(len - buf.length);
 		zeros.fill(0);
 		buf = Buffer.concat([zeros, buf]);
 	}
@@ -40675,7 +40675,7 @@ HashNoConstructor.prototype._flush = function (next) {
 
 HashNoConstructor.prototype.update = function (data, enc) {
   if (typeof data === 'string') {
-    data = new Buffer(data, enc)
+    data = Buffer.from(data, enc)
   }
 
   this.buffers.push(data)
@@ -40699,7 +40699,7 @@ function Hash(hash) {
 inherits(Hash, Transform)
 
 Hash.prototype._transform = function (data, enc, next) {
-  if (enc) data = new Buffer(data, enc)
+  if (enc) data = Buffer.from(data, enc)
 
   this._hash.update(data)
 
@@ -40715,7 +40715,7 @@ Hash.prototype._flush = function (next) {
 
 Hash.prototype.update = function (data, enc) {
   if (typeof data === 'string') {
-    data = new Buffer(data, enc)
+    data = Buffer.from(data, enc)
   }
 
   this._hash.update(data)
@@ -40740,7 +40740,7 @@ module.exports = function createHash (alg) {
 (function (Buffer){
 'use strict';
 var intSize = 4;
-var zeroBuffer = new Buffer(intSize); zeroBuffer.fill(0);
+var zeroBuffer = Buffer.from(intSize); zeroBuffer.fill(0);
 var chrsz = 8;
 
 function toArray(buf, bigEndian) {
@@ -40758,7 +40758,7 @@ function toArray(buf, bigEndian) {
 }
 
 function toBuffer(arr, size, bigEndian) {
-  var buf = new Buffer(size);
+  var buf = Buffer.from(size);
   var fn = bigEndian ? buf.writeInt32BE : buf.writeInt32LE;
   for (var i = 0; i < arr.length; i++) {
     fn.call(buf, arr[i], i * 4, true);
@@ -40767,7 +40767,7 @@ function toBuffer(arr, size, bigEndian) {
 }
 
 function hash(buf, fn, hashSize, bigEndian) {
-  if (!Buffer.isBuffer(buf)) buf = new Buffer(buf);
+  if (!Buffer.isBuffer(buf)) buf = Buffer.from(buf);
   var arr = fn(toArray(buf, bigEndian), buf.length * chrsz);
   return toBuffer(arr, hashSize, bigEndian);
 }
@@ -41108,7 +41108,7 @@ function ripemd160 (message) {
   var H = [0x67452301, 0xEFCDAB89, 0x98BADCFE, 0x10325476, 0xC3D2E1F0]
 
   if (typeof message === 'string') {
-    message = new Buffer(message, 'utf8')
+    message = Buffer.from(message, 'utf8')
   }
 
   var m = bytesToWords(message)
@@ -41138,7 +41138,7 @@ function ripemd160 (message) {
   }
 
   var digestbytes = wordsToBytes(H)
-  return new Buffer(digestbytes)
+  return Buffer.from(digestbytes)
 }
 
 module.exports = ripemd160
@@ -41148,7 +41148,7 @@ module.exports = ripemd160
 (function (Buffer){
 // prototype class for hash functions
 function Hash (blockSize, finalSize) {
-  this._block = new Buffer(blockSize)
+  this._block = Buffer.from(blockSize)
   this._finalSize = finalSize
   this._blockSize = blockSize
   this._len = 0
@@ -41158,7 +41158,7 @@ function Hash (blockSize, finalSize) {
 Hash.prototype.update = function (data, enc) {
   if (typeof data === 'string') {
     enc = enc || 'utf8'
-    data = new Buffer(data, enc)
+    data = Buffer.from(data, enc)
   }
 
   var l = this._len += data.length
@@ -41322,7 +41322,7 @@ Sha.prototype._update = function (M) {
 }
 
 Sha.prototype._hash = function () {
-  var H = new Buffer(20)
+  var H = Buffer.from(20)
 
   H.writeInt32BE(this._a | 0, 0)
   H.writeInt32BE(this._b | 0, 4)
@@ -41422,7 +41422,7 @@ Sha1.prototype._update = function (M) {
 }
 
 Sha1.prototype._hash = function () {
-  var H = new Buffer(20)
+  var H = Buffer.from(20)
 
   H.writeInt32BE(this._a | 0, 0)
   H.writeInt32BE(this._b | 0, 4)
@@ -41476,7 +41476,7 @@ Sha224.prototype.init = function () {
 }
 
 Sha224.prototype._hash = function () {
-  var H = new Buffer(28)
+  var H = Buffer.from(28)
 
   H.writeInt32BE(this._a, 0)
   H.writeInt32BE(this._b, 4)
@@ -41628,7 +41628,7 @@ Sha256.prototype._update = function (M) {
 }
 
 Sha256.prototype._hash = function () {
-  var H = new Buffer(32)
+  var H = Buffer.from(32)
 
   H.writeInt32BE(this._a, 0)
   H.writeInt32BE(this._b, 4)
@@ -41685,7 +41685,7 @@ Sha384.prototype.init = function () {
 }
 
 Sha384.prototype._hash = function () {
-  var H = new Buffer(48)
+  var H = Buffer.from(48)
 
   function writeInt64BE (h, l, offset) {
     H.writeInt32BE(h, offset)
@@ -41932,7 +41932,7 @@ Sha512.prototype._update = function (M) {
 }
 
 Sha512.prototype._hash = function () {
-  var H = new Buffer(64)
+  var H = Buffer.from(64)
 
   function writeInt64BE (h, l, offset) {
     H.writeInt32BE(h, offset)
@@ -41962,14 +41962,14 @@ var inherits = require('inherits')
 
 var Transform = require('stream').Transform
 
-var ZEROS = new Buffer(128)
+var ZEROS = Buffer.from(128)
 ZEROS.fill(0)
 
 function Hmac(alg, key) {
   Transform.call(this)
 
   if (typeof key === 'string') {
-    key = new Buffer(key)
+    key = Buffer.from(key)
   }
 
   var blocksize = (alg === 'sha512' || alg === 'sha384') ? 128 : 64
@@ -41984,8 +41984,8 @@ function Hmac(alg, key) {
     key = Buffer.concat([key, ZEROS], blocksize)
   }
 
-  var ipad = this._ipad = new Buffer(blocksize)
-  var opad = this._opad = new Buffer(blocksize)
+  var ipad = this._ipad = Buffer.from(blocksize)
+  var opad = this._opad = Buffer.from(blocksize)
 
   for (var i = 0; i < blocksize; i++) {
     ipad[i] = key[i] ^ 0x36
@@ -42034,8 +42034,8 @@ var primes = require('./lib/primes');
 var DH = require('./lib/dh');
 
 function getDiffieHellman(mod) {
-  var prime = new Buffer(primes[mod].prime, 'hex');
-  var gen = new Buffer(primes[mod].gen, 'hex');
+  var prime = Buffer.from(primes[mod].prime, 'hex');
+  var gen = Buffer.from(primes[mod].gen, 'hex');
 
   return new DH(prime, gen);
 }
@@ -42049,10 +42049,10 @@ function createDiffieHellman(prime, enc, generator, genc) {
 
   enc = enc || 'binary';
   genc = genc || 'binary';
-  generator = generator || new Buffer([2]);
+  generator = generator || Buffer.from([2]);
 
   if (!Buffer.isBuffer(generator)) {
-    generator = new Buffer(generator, genc);
+    generator = Buffer.from(generator, genc);
   }
 
   if (typeof prime === 'number') {
@@ -42060,7 +42060,7 @@ function createDiffieHellman(prime, enc, generator, genc) {
   }
 
   if (!Buffer.isBuffer(prime)) {
-    prime = new Buffer(prime, enc);
+    prime = Buffer.from(prime, enc);
   }
 
   return new DH(prime, generator, true);
@@ -42087,7 +42087,7 @@ module.exports = DH;
 function setPublicKey(pub, enc) {
   enc = enc || 'utf8';
   if (!Buffer.isBuffer(pub)) {
-    pub = new Buffer(pub, enc);
+    pub = Buffer.from(pub, enc);
   }
   this._pub = new BN(pub);
   return this;
@@ -42096,7 +42096,7 @@ function setPublicKey(pub, enc) {
 function setPrivateKey(priv, enc) {
   enc = enc || 'utf8';
   if (!Buffer.isBuffer(priv)) {
-    priv = new Buffer(priv, enc);
+    priv = Buffer.from(priv, enc);
   }
   this._priv = new BN(priv);
   return this;
@@ -42196,10 +42196,10 @@ DH.prototype.computeSecret = function (other) {
   other = new BN(other);
   other = other.toRed(this._prime);
   var secret = other.redPow(this._priv).fromRed();
-  var out = new Buffer(secret.toArray());
+  var out = Buffer.from(secret.toArray());
   var prime = this.getPrime();
   if (out.length < prime.length) {
-    var front = new Buffer(prime.length - out.length);
+    var front = Buffer.from(prime.length - out.length);
     front.fill(0);
     out = Buffer.concat([front, out]);
   }
@@ -42225,14 +42225,14 @@ DH.prototype.getGenerator = function (enc) {
 DH.prototype.setGenerator = function (gen, enc) {
   enc = enc || 'utf8';
   if (!Buffer.isBuffer(gen)) {
-    gen = new Buffer(gen, enc);
+    gen = Buffer.from(gen, enc);
   }
   this._gen = new BN(gen);
   return this;
 };
 
 function formatReturnValue(bn, enc) {
-  var buf = new Buffer(bn.toArray());
+  var buf = Buffer.from(bn.toArray());
   if (!enc) {
     return buf;
   } else {
@@ -42569,13 +42569,13 @@ function pbkdf2Sync (password, salt, iterations, keylen, digest) {
 
   digest = digest || 'sha1'
 
-  if (!Buffer.isBuffer(password)) password = new Buffer(password, 'binary')
-  if (!Buffer.isBuffer(salt)) salt = new Buffer(salt, 'binary')
+  if (!Buffer.isBuffer(password)) password = Buffer.from(password, 'binary')
+  if (!Buffer.isBuffer(salt)) salt = Buffer.from(salt, 'binary')
 
   var hLen
   var l = 1
-  var DK = new Buffer(keylen)
-  var block1 = new Buffer(salt.length + 4)
+  var DK = Buffer.from(keylen)
+  var block1 = Buffer.from(salt.length + 4)
   salt.copy(block1, 0, 0, salt.length)
 
   var r
@@ -42587,7 +42587,7 @@ function pbkdf2Sync (password, salt, iterations, keylen, digest) {
 
     if (!hLen) {
       hLen = U.length
-      T = new Buffer(hLen)
+      T = Buffer.from(hLen)
       l = Math.ceil(keylen / hLen)
       r = keylen - (l - 1) * hLen
     }
@@ -42626,7 +42626,7 @@ exports.publicDecrypt = function publicDecrypt(key, buf) {
 (function (Buffer){
 var createHash = require('create-hash');
 module.exports = function (seed, len) {
-  var t = new Buffer('');
+  var t = Buffer.from('');
   var  i = 0, c;
   while (t.length < len) {
     c = i2ops(i++);
@@ -42636,7 +42636,7 @@ module.exports = function (seed, len) {
 };
 
 function i2ops(c) {
-  var out = new Buffer(4);
+  var out = Buffer.from(4);
   out.writeUInt32BE(c,0);
   return out;
 }
@@ -42715,7 +42715,7 @@ module.exports = function privateDecrypt(private_key, enc, reverse) {
   } else {
     msg = crt(enc, key);
   }
-  var zBuffer = new Buffer(k - msg.length);
+  var zBuffer = Buffer.from(k - msg.length);
   zBuffer.fill(0);
   msg = Buffer.concat([zBuffer, msg], k);
   if (padding === 4) {
@@ -42733,7 +42733,7 @@ function oaep(key, msg){
   var n = key.modulus;
   var k = key.modulus.byteLength();
   var mLen = msg.length;
-  var iHash = createHash('sha1').update(new Buffer('')).digest();
+  var iHash = createHash('sha1').update(Buffer.from('')).digest();
   var hLen = iHash.length;
   var hLen2 = 2 * hLen;
   if (msg[0] !== 0) {
@@ -42781,8 +42781,8 @@ function pkcs1(key, msg, reverse){
   return  msg.slice(i);
 }
 function compare(a, b){
-  a = new Buffer(a);
-  b = new Buffer(b);
+  a = Buffer.from(a);
+  b = Buffer.from(b);
   var dif = 0;
   var len = a.length;
   if (a.length !== b.length) {
@@ -42846,19 +42846,19 @@ module.exports = function publicEncrypt(public_key, msg, reverse) {
 function oaep(key, msg){
   var k = key.modulus.byteLength();
   var mLen = msg.length;
-  var iHash = createHash('sha1').update(new Buffer('')).digest();
+  var iHash = createHash('sha1').update(Buffer.from('')).digest();
   var hLen = iHash.length;
   var hLen2 = 2 * hLen;
   if (mLen > k - hLen2 - 2) {
     throw new Error('message too long');
   }
-  var ps = new Buffer(k - mLen - hLen2 - 2);
+  var ps = Buffer.from(k - mLen - hLen2 - 2);
   ps.fill(0);
   var dblen = k - hLen - 1;
   var seed = randomBytes(hLen);
-  var maskedDb = xor(Buffer.concat([iHash, ps, new Buffer([1]), msg], dblen), mgf(seed, dblen));
+  var maskedDb = xor(Buffer.concat([iHash, ps, Buffer.from([1]), msg], dblen), mgf(seed, dblen));
   var maskedSeed = xor(seed, mgf(maskedDb, hLen));
-  return new bn(Buffer.concat([new Buffer([0]), maskedSeed, maskedDb], k));
+  return new bn(Buffer.concat([Buffer.from([0]), maskedSeed, maskedDb], k));
 }
 function pkcs1(key, msg, reverse){
   var mLen = msg.length;
@@ -42868,15 +42868,15 @@ function pkcs1(key, msg, reverse){
   }
   var ps;
   if (reverse) {
-    ps = new Buffer(k - mLen - 3);
+    ps = Buffer.from(k - mLen - 3);
     ps.fill(0xff);
   } else {
     ps = nonZero(k - mLen - 3);
   }
-  return new bn(Buffer.concat([new Buffer([0, reverse?1:2]), ps, new Buffer([0]), msg], k));
+  return new bn(Buffer.concat([Buffer.from([0, reverse?1:2]), ps, Buffer.from([0]), msg], k));
 }
 function nonZero(len, crypto) {
-  var out = new Buffer(len);
+  var out = Buffer.from(len);
   var i = 0;
   var cache = randomBytes(len*2);
   var cur = 0;
@@ -42898,7 +42898,7 @@ function nonZero(len, crypto) {
 (function (Buffer){
 var bn = require('bn.js');
 function withPublic(paddedMsg, key) {
-  return new Buffer(paddedMsg
+  return Buffer.from(paddedMsg
     .toRed(bn.mont(key.modulus))
     .redPow(new bn(key.publicExponent))
     .fromRed()
@@ -42927,7 +42927,7 @@ if(crypto && crypto.getRandomValues) {
   module.exports = oldBrowser;
 }
 function randomBytes(size, cb) {
-  var bytes = new Buffer(size); //in browserify, this is an extended Uint8Array
+  var bytes = Buffer.from(size); //in browserify, this is an extended Uint8Array
     /* This will not work in older browsers.
      * See https://developer.mozilla.org/en-US/docs/Web/API/window.crypto.getRandomValues
      */
@@ -43512,7 +43512,7 @@ Readable.prototype.push = function(chunk, encoding) {
   if (!state.objectMode && typeof chunk === 'string') {
     encoding = encoding || state.defaultEncoding;
     if (encoding !== state.encoding) {
-      chunk = new Buffer(chunk, encoding);
+      chunk = Buffer.from(chunk, encoding);
       encoding = '';
     }
   }
@@ -44255,7 +44255,7 @@ function fromList(n, state) {
       if (stringMode)
         ret = '';
       else
-        ret = new Buffer(n);
+        ret = Buffer.from(n);
 
       var c = 0;
       for (var i = 0, l = list.length; i < l && c < n; i++) {
@@ -44600,7 +44600,7 @@ function decodeChunk(state, chunk, encoding) {
   if (!state.objectMode &&
       state.decodeStrings !== false &&
       typeof chunk === 'string') {
-    chunk = new Buffer(chunk, encoding);
+    chunk = Buffer.from(chunk, encoding);
   }
   return chunk;
 }

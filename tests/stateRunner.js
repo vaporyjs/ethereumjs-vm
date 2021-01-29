@@ -44,7 +44,7 @@ module.exports = function runStateTest (options, testData, t, cb) {
       if (testData.logs.length !== 0) {
         var bloom = new Bloom()
         testData.logs.forEach(function (l) {
-          bloom.or(new Bloom(new Buffer(l.bloom, 'hex')))
+          bloom.or(new Bloom(Buffer.from(l.bloom, 'hex')))
         })
         t.equal(bloom.bitvector.toString('hex'), result.bloom.bitvector.toString('hex'), 'the bloom should be correct')
       }

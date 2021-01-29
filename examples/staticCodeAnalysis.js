@@ -2,7 +2,7 @@ var data = '6107608061000e6000396000f30060003560e060020a90048063141961bc1461006e
 
 var opcodes = require('../lib/opcodes.js')
 
-nameOpCodes(new Buffer(data, 'hex'))
+nameOpCodes(Buffer.from(data, 'hex'))
 
 function nameOpCodes (raw) {
   var pushData

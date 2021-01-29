@@ -28,22 +28,22 @@ exports.dumpState = function (state, cb) {
 
 var format = exports.format = function (a, toZero, isHex) {
   if (a === '') {
-    return new Buffer([])
+    return Buffer.from([])
   }
 
   if (a.slice && a.slice(0, 2) === '0x') {
     a = a.slice(2)
     if (a.length % 2) a = '0' + a
-    a = new Buffer(a, 'hex')
+    a = Buffer.from(a, 'hex')
   } else if (!isHex) {
-    a = new Buffer(new BN(a).toArray())
+    a = Buffer.from(new BN(a).toArray())
   } else {
     if (a.length % 2) a = '0' + a
-    a = new Buffer(a, 'hex')
+    a = Buffer.from(a, 'hex')
   }
 
   if (toZero && a.toString('hex') === '') {
-    a = new Buffer([0])
+    a = Buffer.from([0])
   }
 
   return a
@@ -63,12 +63,12 @@ exports.makeTx = function (txData) {
   tx.value = format(txData.value)
   tx.data = format(txData.data, false, true) // slice off 0x
   if (txData.secretKey) {
-    var privKey = new Buffer(txData.secretKey, 'hex')
+    var privKey = Buffer.from(txData.secretKey, 'hex')
     tx.sign(privKey)
   } else {
-    tx.v = new Buffer(txData.v.slice(2), 'hex')
-    tx.r = new Buffer(txData.r.slice(2), 'hex')
-    tx.s = new Buffer(txData.s.slice(2), 'hex')
+    tx.v = Buffer.from(txData.v.slice(2), 'hex')
+    tx.r = Buffer.from(txData.r.slice(2), 'hex')
+    tx.s = Buffer.from(txData.s.slice(2), 'hex')
   }
   return tx
 }
@@ -78,7 +78,7 @@ exports.verifyPostConditions = function (state, testData, t, cb) {
   var keyMap = {}
 
   for (var key in testData) {
-    var hash = utils.sha3(new Buffer(key, 'hex')).toString('hex')
+    var hash = utils.sha3(Buffer.from(key, 'hex')).toString('hex')
     hashedAccounts[hash] = testData[key]
     keyMap[hash] = key
   }
@@ -138,7 +138,7 @@ exports.verifyAccountPostConditions = function (state, account, acctData, t, cb)
 
   var hashedStorage = {}
   for (var key in acctData.storage) {
-    hashedStorage[utils.sha3(utils.setLength(new Buffer(key.slice(2), 'hex'), 32)).toString('hex')] = acctData.storage[key]
+    hashedStorage[utils.sha3(utils.setLength(Buffer.from(key.slice(2), 'hex'), 32)).toString('hex')] = acctData.storage[key]
   }
 
   if (storageKeys.length > 0) {
@@ -229,7 +229,7 @@ exports.toDecimal = function (buffer) {
  *  @return {Buffer}
  */
 exports.fromDecimal = function (string) {
-  return new Buffer(new BN(string).toArray())
+  return Buffer.from(new BN(string).toArray())
 }
 
 /**
@@ -239,7 +239,7 @@ exports.fromDecimal = function (string) {
  */
 exports.fromAddress = function (hexString) {
   hexString = hexString.substring(2)
-  return utils.setLength(new Buffer(new BN(hexString, 16).toArray()), 32)
+  return utils.setLength(Buffer.from(new BN(hexString, 16).toArray()), 32)
 }
 
 /**
@@ -248,7 +248,7 @@ exports.fromAddress = function (hexString) {
  * @return {Buffer}
  */
 exports.toCodeHash = function (hexCode) {
-  return utils.sha3(new Buffer(hexCode.substring(2), 'hex'))
+  return utils.sha3(Buffer.from(hexCode.substring(2), 'hex'))
 }
 
 exports.makeBlockHeader = function (data) {
@@ -256,7 +256,7 @@ exports.makeBlockHeader = function (data) {
   header.timestamp = format(data.currentTimestamp)
   header.gasLimit = format(data.currentGasLimit)
   if (data.previousHash) {
-    header.parentHash = new Buffer(data.previousHash, 'hex')
+    header.parentHash = Buffer.from(data.previousHash, 'hex')
   }
   header.coinbase = utils.setLength(format(data.currentCoinbase, false, true), 20)
   header.difficulty = format(data.currentDifficulty)
@@ -315,7 +315,7 @@ exports.setupPreConditions = function (state, testData, done) {
     account.nonce = format(acctData.nonce)
     account.balance = format(acctData.balance)
 
-    var codeBuf = new Buffer(acctData.code.slice(2), 'hex')
+    var codeBuf = Buffer.from(acctData.code.slice(2), 'hex')
     var storageTrie = state.copy()
     storageTrie.root = null
 
@@ -326,8 +326,8 @@ exports.setupPreConditions = function (state, testData, done) {
 
         async.forEachSeries(keys, function (key, cb3) {
           var val = acctData.storage[key]
-          val = rlp.encode(new Buffer(val.slice(2), 'hex'))
-          key = utils.setLength(new Buffer(key.slice(2), 'hex'), 32)
+          val = rlp.encode(Buffer.from(val.slice(2), 'hex'))
+          key = utils.setLength(Buffer.from(key.slice(2), 'hex'), 32)
 
           storageTrie.put(key, val, cb3)
         }, cb2)
@@ -341,7 +341,7 @@ exports.setupPreConditions = function (state, testData, done) {
         if (testData.exec && key === testData.exec.address) {
           testData.root = storageTrie.root
         }
-        state.put(new Buffer(key, 'hex'), account.serialize(), function () {
+        state.put(Buffer.from(key, 'hex'), account.serialize(), function () {
           cb2()
         })
       }

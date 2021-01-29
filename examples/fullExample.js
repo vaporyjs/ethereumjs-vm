@@ -45,7 +45,7 @@ var rawTx2 = {
 // sets up the initial state and runs the callback when complete
 function setup (cb) {
   // the address we are sending from
-  var address = utils.pubToAddress(new Buffer(publicKey, 'hex'))
+  var address = utils.pubToAddress(Buffer.from(publicKey, 'hex'))
 
   // create a new account
   var account = new Account()
@@ -64,7 +64,7 @@ function runTx (raw, cb) {
   var tx = new Transaction(raw)
 
   // tx.from
-  tx.sign(new Buffer(secretKey, 'hex'))
+  tx.sign(Buffer.from(secretKey, 'hex'))
 
   console.log('----running tx-------')
   // run the tx
