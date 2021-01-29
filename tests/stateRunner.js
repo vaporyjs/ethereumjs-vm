@@ -2,7 +2,7 @@ const async = require('async')
 const VM = require('../index.js')
 const Bloom = require('../lib/bloom.js')
 const testUtil = require('./util')
-const Trie = require('merkle-patricia-tree/secure')
+const Trie = require('@vaporyjs/merkle-patricia-tree/secure')
 
 module.exports = function runStateTest (options, testData, t, cb) {
   var state = new Trie()
